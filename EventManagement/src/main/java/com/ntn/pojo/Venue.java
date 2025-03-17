@@ -127,7 +127,7 @@ public class Venue implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.Venue[ id=" + id + " ]";
+        return this.name;
     }
     
 }
