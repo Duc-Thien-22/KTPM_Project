@@ -21,13 +21,21 @@ import java.util.List;
  */
 public class EventServices {
 
-    public List<Event> getEvents() throws SQLException {
+    public List<Event> getEvents(int num, String kw) throws SQLException {
         List<Event> events = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "SELECT*FROM event";
-            Statement stm = conn.createStatement();
-
-            ResultSet rs = stm.executeQuery(sql);
+//            String sql = "SELECT*FROM event ORDER BY start_date DESC";
+            PreparedStatement stm ;
+            
+            if (num == 0) {
+                stm = conn.prepareCall("SELECT*FROM event WHERE name like concat('%',?,'%') ORDER BY start_date desc");
+                stm.setString(1, kw);
+            } else {
+                stm = conn.prepareCall("SELECT*FROM event ORDER BY rand() LIMIT ?");
+                stm.setInt(1, num);
+            }
+            
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 VenueServices v = new VenueServices();
                 Event e = new Event(rs.getInt("id"), rs.getString("name"), rs.getTimestamp("start_date"), rs.getTimestamp("end_date"), rs.getInt("max_attendees"), rs.getBoolean("is_active"));
@@ -39,27 +47,28 @@ public class EventServices {
         return events;
     }
 
-    public int createEvent(String name, Timestamp startDate, Timestamp endDate, int maxAttendees, int venue_id) throws SQLException {
+    public int createEvent(Event e) throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
             String sql = "INSERT INTO event (name, start_date, end_date, max_attendees, venue_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stm = conn.prepareCall(sql);
 
-            stm.setString(1, name);
-            stm.setTimestamp(2, startDate);
-            stm.setTimestamp(3, endDate);
-            stm.setInt(4, maxAttendees);
-            stm.setInt(5, venue_id);
+            stm.setString(1, e.getName());
+            stm.setTimestamp(2, e.getStartDate());
+            stm.setTimestamp(3, e.getEndDate());
+            stm.setInt(4, e.getMaxAttendees());
+            stm.setInt(5, e.getVenue().getId());
 
             return stm.executeUpdate();
         }
     }
 
-    public Event checkVenueAndDateTime(int venueId, Timestamp startDate) throws SQLException {
+    public Event checkVenueAndDateTime(int venueId, Timestamp startDate,int eventId) throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "SELECT * FROM event WHERE venue_id = ? AND ? BETWEEN start_date AND end_date";
+            String sql = "SELECT * FROM event WHERE venue_id = ? AND DATE_FORMAT(?, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(start_date, '%Y-%m-%d %H:%i')AND DATE_FORMAT(end_date, '%Y-%m-%d %H:%i') AND id != ?";
             PreparedStatement stm = conn.prepareCall(sql);
             stm.setInt(1, venueId);
             stm.setTimestamp(2, startDate);
+            stm.setInt(3, eventId);
 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -84,4 +93,23 @@ public class EventServices {
         }
         return rs;
     }
+
+    public int updateEventById(Event e) throws SQLException {
+        int rs = -1;
+        try (Connection conn = JdbcUtils.getConnection()) {
+            String sql = "UPDATE event SET name = ?, start_date = ? , end_date = ?, max_attendees = ? , venue_id = ?, is_active = ? WHERE id = ?";
+            PreparedStatement stm = conn.prepareCall(sql);
+            stm.setString(1, e.getName());
+            stm.setTimestamp(2, e.getStartDate());
+            stm.setTimestamp(3, e.getEndDate());
+            stm.setInt(4, e.getMaxAttendees());
+            stm.setInt(5, e.getVenue().getId());
+            stm.setBoolean(6, e.getIsActive());
+            stm.setInt(7, e.getId());
+            
+            rs = stm.executeUpdate();
+        }
+        return rs;
+    }
+    
 }

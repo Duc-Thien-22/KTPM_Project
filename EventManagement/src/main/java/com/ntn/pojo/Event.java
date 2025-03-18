@@ -81,6 +81,12 @@ public class Event implements Serializable {
         this.endDate = endDate;
         this.maxAttendees = maxAttendees;
     }
+    public Event(String name, Timestamp startDate, Timestamp endDate, int maxAttendees) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.maxAttendees = maxAttendees;
+    }
     
     public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees,boolean is_active) {
         this.id = id;
