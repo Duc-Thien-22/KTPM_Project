@@ -65,6 +65,7 @@ public class Event implements Serializable {
     @javax.persistence.JoinColumn(name = "venue_id", referencedColumnName = "id")
     @javax.persistence.ManyToOne
     private Venue venueId;
+    private int registeredUsers;
 
     public Event() {
     }
@@ -73,12 +74,14 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Integer id, String name, Date startDate, Date endDate, int maxAttendees) {
+    public Event(Integer id, String name, Date startDate, Date endDate, int maxAttendees,boolean isActive, Venue venueId) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.maxAttendees = maxAttendees;
+        this.venueId = venueId;
+        this.isActive = isActive;
     }
 
     public Integer getId() {
@@ -208,6 +211,20 @@ public class Event implements Serializable {
     @Override
     public String toString() {
         return "com.ntn.pojo.Event[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the registeredUsers
+     */
+    public int getRegisteredUsers() {
+        return registeredUsers;
+    }
+
+    /**
+     * @param registeredUsers the registeredUsers to set
+     */
+    public void setRegisteredUsers(int registeredUsers) {
+        this.registeredUsers = registeredUsers;
     }
     
 }
