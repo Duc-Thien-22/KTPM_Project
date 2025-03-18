@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cnatro.controller.RegisterUserController">
+    
+
+    <top>
+        <VBox alignment="CENTER" style="-fx-background-color: #f0f0f0;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: darkblue;" text="HỆ THỐNG QUẢN LÝ SỰ KIỆN" />
+        </VBox>
+    </top>
+    
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            
+            <Tab text="Danh sách sự kiện">
+    <ScrollPane fitToWidth="true">
+        <VBox fx:id="eventListContainer" spacing="20">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+        </VBox>
+    </ScrollPane>
+</Tab>
+            
+             
+            <Tab text="Thông báo">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Thông báo và nhắc nhở" />
+                        
+                        <ListView prefHeight="200">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Thông báo: Sự kiện Hội thảo công nghệ sẽ diễn ra vào ngày mai!" />
+                                    <String fx:value="Nhắc nhở: Sự kiện Workshop Thiết kế UI/UX đã thay đổi thời gian, vui lòng kiểm tra chi tiết." />
+                                    <String fx:value="Thông báo: Buổi hòa nhạc đã hủy, tiền đã hoàn về tài khoản của bạn." />
+                                </FXCollections>
+                            </items>
+                        </ListView>
+                        
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Các quy định về thông báo:" />
+                        
+                        <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                            <Label text="- Thông báo thay đổi thời gian phải gửi trước 24h." />
+                            <Label text="- Nếu sự kiện hủy, phải hoàn tiền cho người tham gia." />
+                            <Label text="- Nhắc nhở tự động trước 1 ngày sự kiện diễn ra." />
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+              
+            <Tab text="Thông tin cá nhân">
+                <ScrollPane fitToWidth="true">
+                    <VBox alignment="TOP_CENTER" spacing="15">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Thông tin người dùng" />
+                        
+                        
+                        <GridPane alignment="CENTER" hgap="10" vgap="10">
+                            <padding>
+                                <Insets bottom="20" left="20" right="20" top="20" />
+                            </padding>
+                            
+                            <Label text="Họ tên:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            
+                            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            
+                            <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label text="Nhân" GridPane.columnIndex="1" />
+                            <Label text="nhan@gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                        
+                       
+                        <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Danh sách sự kiện đã đăng ký" />
+                            <Label text="- Người dùng không đăng ký trùng sự kiện cùng giờ." />
+                        </VBox>
+                        <GridPane alignment="CENTER" hgap="10" vgap="10">
+                            <padding>
+                                <Insets bottom="20" left="20" right="20" top="20" />
+                            </padding>
+                            <!--                     <children>
+                               <Label text="Họ tên:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                               <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                               <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                               <TextField promptText="Nhập số điện thoại" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                               <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Lưu thông tin" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                               <Label text="Label" GridPane.columnIndex="1" />
+                            </children>-->
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
+                        </GridPane>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
