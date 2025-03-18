@@ -5,6 +5,7 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -38,11 +39,11 @@ public class Event implements Serializable {
     @javax.persistence.Basic(optional = false)
     @javax.persistence.Column(name = "start_date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date startDate;
+    private Timestamp startDate;
     @javax.persistence.Basic(optional = false)
     @javax.persistence.Column(name = "end_date")
     @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date endDate;
+    private Timestamp endDate;
     @javax.persistence.Basic(optional = false)
     @javax.persistence.Column(name = "max_attendees")
     private int maxAttendees;
@@ -64,8 +65,9 @@ public class Event implements Serializable {
     private Set<Registration> registrationSet;
     @javax.persistence.JoinColumn(name = "venue_id", referencedColumnName = "id")
     @javax.persistence.ManyToOne
-    private Venue venueId;
     private int registeredUsers;
+    private Venue venue;
+
 
     public Event() {
     }
@@ -74,14 +76,13 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Integer id, String name, Date startDate, Date endDate, int maxAttendees,boolean isActive, Venue venueId) {
+    public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees,boolean is_active) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.maxAttendees = maxAttendees;
-        this.venueId = venueId;
-        this.isActive = isActive;
+        this.isActive = is_active;
     }
 
     public Integer getId() {
@@ -100,19 +101,19 @@ public class Event implements Serializable {
         this.name = name;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public Timestamp getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(Timestamp endDate) {
         this.endDate = endDate;
     }
 
@@ -180,12 +181,12 @@ public class Event implements Serializable {
         this.registrationSet = registrationSet;
     }
 
-    public Venue getVenueId() {
-        return venueId;
+    public Venue getVenue() {
+        return venue;
     }
 
-    public void setVenueId(Venue venueId) {
-        this.venueId = venueId;
+    public void setVenue(Venue venue) {
+        this.venue = venue;
     }
 
     @Override
