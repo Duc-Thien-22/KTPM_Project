@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="450" maxWidth="350" spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-border-radius: 10; -fx-background-radius: 10;" stylesheets="@static/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ntn.controllers.LoginController">
+
+    <!-- Tiêu đề -->
+    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2A2E37;" text="Đăng Nhập Hệ Thống">
+        <effect>
+            <DropShadow color="#00000020" radius="5" />
+        </effect>
+    </Label>
+
+    <!-- Username field -->
+    <TextField fx:id="txtUsername" prefWidth="250" promptText="Tên đăng nhập" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #cccccc; -fx-padding: 10;                        -fx-font-size: 14px;">
+    </TextField>
+
+    <!-- Password field -->
+    <PasswordField fx:id="txtPassword" prefWidth="250" promptText="Mật khẩu" style="-fx-background-radius: 5; -fx-border-radius: 5;                            -fx-border-color: #cccccc; -fx-padding: 10;                            -fx-font-size: 14px;">
+    </PasswordField>
+
+    <!-- Container cho 2 nút -->
+    <HBox alignment="CENTER" spacing="10">
+        <!-- Nút Login -->
+        <Button onAction="#loginHandler" prefWidth="120" style="-fx-background-color: linear-gradient(to right, #4CAF50, #45a049);                        -fx-text-fill: white; -fx-font-size: 14px;                         -fx-background-radius: 5; -fx-padding: 8 15 8 15;" text="Đăng Nhập">
+            <effect>
+                <DropShadow color="#00000040" radius="5" />
+            </effect>
+        </Button>
+
+        <!-- Nút Đăng ký -->
+        <Button prefWidth="120" style="-fx-background-color: linear-gradient(to right, #2196F3, #1E88E5);                        -fx-text-fill: white; -fx-font-size: 14px;                         -fx-background-radius: 5; -fx-padding: 8 15 8 15;" text="Đăng Ký">
+            <effect>
+                <DropShadow color="#00000040" radius="5" />
+            </effect>
+        </Button>
+    </HBox>
+
+</VBox>

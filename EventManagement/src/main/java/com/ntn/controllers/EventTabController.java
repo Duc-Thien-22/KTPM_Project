@@ -80,6 +80,8 @@ public class EventTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            // cap nhat lai su kien het han
+            this.resetEventData();
             this.loadVenue();
             this.loadColumnEvents();
             this.loadEvent("");
@@ -141,12 +143,12 @@ public class EventTabController implements Initializable {
             return new SimpleStringProperty(status);
         });
 
-        TableColumn<Event, Void> colDelAction = new TableColumn<>("Action");
+        TableColumn<Event, Void> colDelAction = new TableColumn("Action");
 
         colDelAction.setCellFactory(col -> new TableCell<>() {
-            private final Button btnDel = new Button("Xóa");
-            private final Button btnUpdate = new Button("Cập nhật");
-            private final HBox hbox = new HBox(5, btnUpdate, btnDel);
+            private Button btnDel = new Button("Xóa");
+            private Button btnUpdate = new Button("Cập nhật");
+            private HBox hbox = new HBox(5, btnUpdate, btnDel);
 
             {
                 btnDel.setOnAction(evt -> {
@@ -192,9 +194,7 @@ public class EventTabController implements Initializable {
     }
 
     public void loadEvent(String kw) throws SQLException {
-        // cap nhat lai su kien het han
-        this.resetEventData();
-
+        this.tbEvents.getItems().clear();
         this.tbEvents.setItems(FXCollections.observableList(this.eventServices.getEvents(0, kw)));
         this.tbEvents.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
