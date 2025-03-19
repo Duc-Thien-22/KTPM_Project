@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -55,7 +56,6 @@ public class RegisterUserController implements Initializable {
     private Label lbAttendees;
     @FXML
     private Label lbVenue;
-    
     @FXML
     private VBox eventListContainer;
     
@@ -64,11 +64,11 @@ public class RegisterUserController implements Initializable {
         List<Event> events = s.getEvent();
 
          if (eventListContainer != null) {
-        eventListContainer.getChildren().clear(); // Xóa dữ liệu cũ
+        this.eventListContainer.getChildren().clear(); // Xóa dữ liệu cũ
     }
          if (events.isEmpty()) {
         Label emptyLabel = new Label("Không có sự kiện nào.");
-        eventListContainer.getChildren().add(emptyLabel);
+        this.eventListContainer.getChildren().add(emptyLabel);
         return;
     }
 
@@ -89,12 +89,12 @@ public class RegisterUserController implements Initializable {
             // eventImage.setImage(new Image(e.getImageUrl())); // Nếu có URL ảnh từ DB, dùng dòng này
 
             VBox detailsBox = new VBox(5);
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             detailsBox.getChildren().addAll(
-                createInfoRow("Ngày bắt đầu:", formatter.format(e.getStartDate())),
-                createInfoRow("Ngày kết thúc:", formatter.format(e.getEndDate())),
-                //createInfoRow("Địa điểm:", e.getVenueId().getName()),
-                createInfoRow("Số lượng người đăng ký: ",String.valueOf(e.getRegisteredUsers())+"/"+String.valueOf(e.getMaxAttendees()))
+                createInfoRow("Ngày bắt đầu:", Utils.formatedDate(e.getStartDate())),
+                createInfoRow("Ngày kết thúc:",  Utils.formatedDate(e.getEndDate())),
+                createInfoRow("Địa điểm:", e.getVenue().getName()),
+                createInfoRow("Số lượng người đăng ký: ",
+                        String.valueOf(e.getRegisteredUsers())+"/"+String.valueOf(e.getMaxAttendees()))
             );
 
             infoBox.getChildren().addAll(eventImage, detailsBox);
@@ -117,6 +117,10 @@ public class RegisterUserController implements Initializable {
         Label valueLabel = new Label(value);
         row.getChildren().addAll(titleLabel, valueLabel);
         return row;
+    }
+    
+    public void registerEvent(ActionEvent e){
+        
     }
 
 

@@ -39,8 +39,7 @@ public class ListEventService {
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                //Venue venue = new Venue(rs.getInt("venue_id"), rs.getString("venue_name"));
-
+                
                 Event e = new Event(
                         rs.getInt("event_id"), // Lấy đúng id của event
                         rs.getString("event_name"), // Lấy đúng tên event
@@ -51,6 +50,7 @@ public class ListEventService {
                         
                 );
                 e.setRegisteredUsers(rs.getInt("registered_users"));
+                e.setVenue(new Venue(rs.getInt("venue_id"),rs.getString("venue_name"),0));
                 events.add(e);
             }
         }
