@@ -17,5 +17,6 @@ com\ntn\pojo\JdbcUtils.class
 com\ntn\controllers\EventTabController$1.class
 com\ntn\pojo\Ticket.class
 com\ntn\pojo\Venue.class
+com\ntn\services\UserServices.class
 com\ntn\pojo\Registration.class
 com\ntn\pojo\Event.class

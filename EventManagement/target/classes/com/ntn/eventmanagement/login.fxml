@@ -8,7 +8,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxHeight="450" maxWidth="350" spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-border-radius: 10; -fx-background-radius: 10;" stylesheets="@static/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ntn.controllers.LoginController">
+<VBox alignment="CENTER" maxHeight="450" maxWidth="350" spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-border-radius: 10; -fx-background-radius: 10;" stylesheets="@static/styles.css"
+      xmlns="http://javafx.com/javafx/23.0.1" 
+      xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.ntn.controllers.LoginController">
 
     <!-- Tiêu đề -->
     <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2A2E37;" text="Đăng Nhập Hệ Thống">

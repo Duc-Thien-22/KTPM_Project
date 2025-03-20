@@ -17,19 +17,18 @@ import javafx.scene.Parent;
  */
 public class ViewManager {
 
-    private static Stage privateScene;
+    private static Stage privateScene; // cửa sổ ứng dụng đang làm việc
 
-    public static void setPrivateScene(Stage currentScene) {
-        privateScene = currentScene;
+    public static void setPrivateScene(Stage currentStage) {
+        privateScene = currentStage;
     }
 
-    public void routeView(String fxml) throws IOException {
+    public static void routeView(String fxml) throws IOException {
         Scene scene = new Scene(loadFXML(fxml));
         privateScene.setScene(scene);
-        privateScene.show();
     }
 
-    public static Parent loadFXML(String fxml) throws IOException {
+    private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }

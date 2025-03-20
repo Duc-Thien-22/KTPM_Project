@@ -33,6 +33,12 @@ public class User implements Serializable {
     @javax.persistence.Column(name = "id")
     private Integer id;
     @javax.persistence.Basic(optional = false)
+    @javax.persistence.Column(name = "username")
+    private String username;
+    @javax.persistence.Basic(optional = false)
+    @javax.persistence.Column(name = "password")
+    private String password;
+    @javax.persistence.Basic(optional = false)
     @javax.persistence.Column(name = "first_name")
     private String firstName;
     @javax.persistence.Basic(optional = false)
@@ -64,8 +70,10 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String firstName, String lastName, String email, String role) {
+    public User(Integer id, String username, String password, String firstName, String lastName, String email, String role) {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -176,5 +184,33 @@ public class User implements Serializable {
     public String toString() {
         return "com.ntn.pojo.User[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
