@@ -5,6 +5,7 @@
 package com.ntn.controllers;
 
 import com.ntn.eventmanagement.SessionManager;
+import com.ntn.eventmanagement.ValidationUtils;
 import com.ntn.eventmanagement.ViewManager;
 import com.ntn.pojo.User;
 import com.ntn.services.UserServices;
@@ -16,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 /**
@@ -28,7 +30,7 @@ public class LoginController implements Initializable {
     @FXML
     private TextField txtUsername;
     @FXML
-    private TextField txtPassword;
+    private PasswordField txtPassword;
 
     private final UserServices userServices = new UserServices();
 
@@ -41,18 +43,44 @@ public class LoginController implements Initializable {
     }
 
     public void loginHandler(ActionEvent e) throws SQLException, IOException {
-        User currentUser = this.userServices.checkUserLogin(this.txtUsername.getText(), this.txtPassword.getText());
-        if (currentUser == null) {
-            Utils.getAlert(Alert.AlertType.ERROR, "Đăng nhập thất bại !!");
-            return;
-        }
 
-        SessionManager.login(currentUser);
+        if (!this.txtUsername.getText().isEmpty() && !this.txtPassword.getText().isEmpty()) {
+            if (!ValidationUtils.isValidationPassword(this.txtPassword.getText())) {
+                Utils.getAlert(Alert.AlertType.ERROR, "Password ít nhất là 8 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt");
+                this.txtPassword.clear();
+                return;
+            }
 
-        if ("ROLE_ADMIN".equals(currentUser.getRole())) {
-            ViewManager.routeView("manageEvent");
-        } else {
-            Utils.getAlert(Alert.AlertType.INFORMATION, "Trang user");
-        }
+            User currentUser = this.userServices.getUserByUsername(this.txtUsername.getText());
+            if (currentUser == null) {
+                Utils.getAlert(Alert.AlertType.ERROR, "Bạn chưa có tài khoản !!");
+                this.clearField();
+                return;
+            }
+
+            if (!ValidationUtils.isCheckPassword(this.txtPassword.getText(), currentUser.getPassword())) {
+                Utils.getAlert(Alert.AlertType.ERROR, "Nhập sai mật khẩu !!");
+                this.txtPassword.clear();
+                return;
+            }
+
+            SessionManager.login(currentUser);
+
+            if ("ROLE_ADMIN".equals(currentUser.getRole())) {
+                ViewManager.routeView("manageEvent");
+            } else {
+                Utils.getAlert(Alert.AlertType.INFORMATION, "Trang user");
+            }
+        }else
+            Utils.getAlert(Alert.AlertType.ERROR, "Không được để trống dữ liệu !!");
+    }
+
+    public void addUserHandler(ActionEvent e) throws IOException {
+        ViewManager.routeView("addUser");
+    }
+
+    public void clearField() {
+        this.txtUsername.clear();
+        this.txtPassword.clear();
     }
 }

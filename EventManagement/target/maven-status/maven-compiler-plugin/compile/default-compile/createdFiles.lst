@@ -3,6 +3,7 @@ com\ntn\eventmanagement\ViewManager.class
 com\ntn\controllers\ManageEventController.class
 com\ntn\controllers\LoginController.class
 com\ntn\eventmanagement\SessionManager.class
+com\ntn\controllers\AddUserController.class
 com\ntn\pojo\User.class
 com\ntn\services\EventServices.class
 com\ntn\controllers\Utils.class
@@ -17,6 +18,7 @@ com\ntn\pojo\JdbcUtils.class
 com\ntn\controllers\EventTabController$1.class
 com\ntn\pojo\Ticket.class
 com\ntn\pojo\Venue.class
+com\ntn\eventmanagement\ValidationUtils.class
 com\ntn\services\UserServices.class
 com\ntn\pojo\Registration.class
 com\ntn\pojo\Event.class
