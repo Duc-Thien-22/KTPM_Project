@@ -5,8 +5,10 @@ D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\Utils.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Venue.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Registration.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Tickettype.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\UserNotificationPK.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Ticket.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\App.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\UserNotification.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\User.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\JdbcUtils.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Notification.java

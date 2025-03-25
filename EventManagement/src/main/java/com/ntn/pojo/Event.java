@@ -6,68 +6,85 @@ package com.ntn.pojo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
- * @author NHAT
+ * @author admin
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "event")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
-    @javax.persistence.NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
-    @javax.persistence.NamedQuery(name = "Event.findByName", query = "SELECT e FROM Event e WHERE e.name = :name"),
-    @javax.persistence.NamedQuery(name = "Event.findByStartDate", query = "SELECT e FROM Event e WHERE e.startDate = :startDate"),
-    @javax.persistence.NamedQuery(name = "Event.findByEndDate", query = "SELECT e FROM Event e WHERE e.endDate = :endDate"),
-    @javax.persistence.NamedQuery(name = "Event.findByMaxAttendees", query = "SELECT e FROM Event e WHERE e.maxAttendees = :maxAttendees"),
-    @javax.persistence.NamedQuery(name = "Event.findByIsActive", query = "SELECT e FROM Event e WHERE e.isActive = :isActive"),
-    @javax.persistence.NamedQuery(name = "Event.findByCreatedDate", query = "SELECT e FROM Event e WHERE e.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "Event.findByUpdatedDate", query = "SELECT e FROM Event e WHERE e.updatedDate = :updatedDate")})
+@Entity
+@Table(name = "event")
+@NamedQueries({
+    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
+    @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
+    @NamedQuery(name = "Event.findByName", query = "SELECT e FROM Event e WHERE e.name = :name"),
+    @NamedQuery(name = "Event.findByStartDate", query = "SELECT e FROM Event e WHERE e.startDate = :startDate"),
+    @NamedQuery(name = "Event.findByEndDate", query = "SELECT e FROM Event e WHERE e.endDate = :endDate"),
+    @NamedQuery(name = "Event.findByMaxAttendees", query = "SELECT e FROM Event e WHERE e.maxAttendees = :maxAttendees"),
+    @NamedQuery(name = "Event.findByIsActive", query = "SELECT e FROM Event e WHERE e.isActive = :isActive"),
+    @NamedQuery(name = "Event.findByCreatedDate", query = "SELECT e FROM Event e WHERE e.createdDate = :createdDate"),
+    @NamedQuery(name = "Event.findByUpdatedDate", query = "SELECT e FROM Event e WHERE e.updatedDate = :updatedDate")})
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "name")
+    @Basic(optional = false)
+    @Column(name = "name")
     private String name;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "start_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Basic(optional = false)
+    @Column(name = "start_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp startDate;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "end_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Basic(optional = false)
+    @Column(name = "end_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp endDate;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "max_attendees")
+    @Basic(optional = false)
+    @Column(name = "max_attendees")
     private int maxAttendees;
-    @javax.persistence.Column(name = "is_active")
+    @Column(name = "is_active")
     private Boolean isActive;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date updatedDate;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "eventId")
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDate createdDate;
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDate updatedDate;
+    @JoinTable(name = "event_notification", joinColumns = {
+        @JoinColumn(name = "event_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "notification_id", referencedColumnName = "id")})
+    @ManyToMany
     private Set<Notification> notificationSet;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "eventId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
     private Set<Ticket> ticketSet;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "eventId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
     private Set<Payment> paymentSet;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "eventId")
-    private Set<Registration> registrationSet;
-    @javax.persistence.JoinColumn(name = "venue_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne
-    private int registeredUsers;
+    @JoinColumn(name = "venue_id", referencedColumnName = "id")
+    @ManyToOne
     private Venue venue;
-
+    private int registerUser;
 
     public Event() {
     }
@@ -76,13 +93,12 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees,boolean is_active) {
+    public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.maxAttendees = maxAttendees;
-        this.isActive = is_active;
     }
 
     public Integer getId() {
@@ -133,19 +149,19 @@ public class Event implements Serializable {
         this.isActive = isActive;
     }
 
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getUpdatedDate() {
+    public LocalDate getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(LocalDate updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -171,14 +187,6 @@ public class Event implements Serializable {
 
     public void setPaymentSet(Set<Payment> paymentSet) {
         this.paymentSet = paymentSet;
-    }
-
-    public Set<Registration> getRegistrationSet() {
-        return registrationSet;
-    }
-
-    public void setRegistrationSet(Set<Registration> registrationSet) {
-        this.registrationSet = registrationSet;
     }
 
     public Venue getVenue() {
@@ -215,17 +223,17 @@ public class Event implements Serializable {
     }
 
     /**
-     * @return the registeredUsers
+     * @return the registerUser
      */
-    public int getRegisteredUsers() {
-        return registeredUsers;
+    public int getRegisterUser() {
+        return registerUser;
     }
 
     /**
-     * @param registeredUsers the registeredUsers to set
+     * @param registerUser the registerUser to set
      */
-    public void setRegisteredUsers(int registeredUsers) {
-        this.registeredUsers = registeredUsers;
+    public void setRegisterUser(int registerUser) {
+        this.registerUser = registerUser;
     }
     
 }

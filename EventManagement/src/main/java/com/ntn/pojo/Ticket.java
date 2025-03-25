@@ -5,45 +5,64 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
- * @author NHAT
+ * @author admin
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "ticket")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "Ticket.findAll", query = "SELECT t FROM Ticket t"),
-    @javax.persistence.NamedQuery(name = "Ticket.findById", query = "SELECT t FROM Ticket t WHERE t.id = :id"),
-    @javax.persistence.NamedQuery(name = "Ticket.findByQuantity", query = "SELECT t FROM Ticket t WHERE t.quantity = :quantity"),
-    @javax.persistence.NamedQuery(name = "Ticket.findByCreatedDate", query = "SELECT t FROM Ticket t WHERE t.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "Ticket.findByUpdatedDate", query = "SELECT t FROM Ticket t WHERE t.updatedDate = :updatedDate")})
+@Entity
+@Table(name = "ticket")
+@NamedQueries({
+    @NamedQuery(name = "Ticket.findAll", query = "SELECT t FROM Ticket t"),
+    @NamedQuery(name = "Ticket.findById", query = "SELECT t FROM Ticket t WHERE t.id = :id"),
+    @NamedQuery(name = "Ticket.findByQuantity", query = "SELECT t FROM Ticket t WHERE t.quantity = :quantity"),
+    @NamedQuery(name = "Ticket.findByCreatedDate", query = "SELECT t FROM Ticket t WHERE t.createdDate = :createdDate"),
+    @NamedQuery(name = "Ticket.findByUpdatedDate", query = "SELECT t FROM Ticket t WHERE t.updatedDate = :updatedDate")})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "quantity")
+    @Basic(optional = false)
+    @Column(name = "price")
+    private BigDecimal price;
+    @Basic(optional = false)
+    @Column(name = "quantity")
     private int quantity;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @javax.persistence.JoinColumn(name = "event_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne(optional = false)
+    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Event eventId;
-    @javax.persistence.JoinColumn(name = "ticket_type_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne(optional = false)
+    @JoinColumn(name = "ticket_type_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Tickettype ticketTypeId;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "ticketId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticketId")
     private Set<Registration> registrationSet;
 
     public Ticket() {
@@ -137,6 +156,20 @@ public class Ticket implements Serializable {
     @Override
     public String toString() {
         return "com.ntn.pojo.Ticket[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the price
+     */
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
     
 }

@@ -7,6 +7,8 @@ com\ntn\controllers\Utils.class
 com\ntn\pojo\Payment.class
 com\ntn\pojo\Ticket.class
 module-info.class
+com\ntn\pojo\UserNotificationPK.class
+com\ntn\pojo\UserNotification.class
 com\ntn\pojo\Venue.class
 com\ntn\pojo\Notification.class
 com\ntn\pojo\Tickettype.class
