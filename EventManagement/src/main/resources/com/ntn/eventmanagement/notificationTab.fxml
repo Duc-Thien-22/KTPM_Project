@@ -7,32 +7,33 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" 
-          xmlns:fx="http://javafx.com/fxml/1" 
-          fx:controller="com.ntn.controllers.NotificationTabController">
+<VBox spacing="10"
+      xmlns:fx="http://javafx.com/fxml/1"
+      >
     <padding>
         <Insets top="10" right="15" bottom="10" left="15"/>
     </padding>
-                    
+
     <Label text="GỬI THÔNG BÁO VÀ NHẮC NHỞ" styleClass="section-label"/>
-                    
+
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Chọn sự kiện:"/>
-        <ComboBox fx:id="notificationEventComboBox" prefWidth="300"/>
+        <ListView fx:id="notificationEventListView" prefWidth="300"
+                  selectionModel="${multiple}"/>
     </HBox>
-                    
+
     <Label text="Nội dung thông báo:"/>
     <TextArea fx:id="notificationMessageArea" prefHeight="100" promptText="Nhập nội dung thông báo hoặc nhắc nhở..."/>
-                    
+
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button fx:id="sendNotificationButton" text="Gửi Thông Báo" 
-                    styleClass="primary-button" />
+        <Button fx:id="sendNotificationButton" text="Gửi Thông Báo"
+                styleClass="primary-button"/>
         <Button fx:id="sendReminderButton" text="Gửi Nhắc Nhở"/>
-        <Button fx:id="cancelEventButton" text="Hủy Sự Kiện" styleClass="danger-button" />
+        <Button fx:id="cancelEventButton" text="Hủy Sự Kiện" styleClass="danger-button"/>
     </HBox>
-                    
+
     <Label text="Lịch sử thông báo:" styleClass="list-label"/>
     <ListView fx:id="notificationListView" VBox.vgrow="ALWAYS"/>
-                    
+
     <Label fx:id="notificationStatusLabel" styleClass="status-label"/>
 </VBox>

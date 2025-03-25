@@ -7,60 +7,77 @@ package com.ntn.pojo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author NHAT
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "user")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @javax.persistence.NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @javax.persistence.NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
-    @javax.persistence.NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
-    @javax.persistence.NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @javax.persistence.NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
-    @javax.persistence.NamedQuery(name = "User.findByCreatedDate", query = "SELECT u FROM User u WHERE u.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "User.findByUpdatedDate", query = "SELECT u FROM User u WHERE u.updatedDate = :updatedDate"),
-    @javax.persistence.NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role")})
+@Entity
+@Table(name = "user")
+@NamedQueries({
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
+    @NamedQuery(name = "User.findByCreatedDate", query = "SELECT u FROM User u WHERE u.createdDate = :createdDate"),
+    @NamedQuery(name = "User.findByUpdatedDate", query = "SELECT u FROM User u WHERE u.updatedDate = :updatedDate"),
+    @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "username")
+    @Basic(optional = false)
+    @Column(name = "username")
     private String username;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "password")
+    @Basic(optional = false)
+    @Column(name = "password")
     private String password;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "first_name")
+    @Basic(optional = false)
+    @Column(name = "first_name")
     private String firstName;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "last_name")
+    @Basic(optional = false)
+    @Column(name = "last_name")
     private String lastName;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "email")
+    @Basic(optional = false)
+    @Column(name = "email")
     private String email;
-    @javax.persistence.Column(name = "phone")
+    @Column(name = "phone")
     private String phone;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "role")
+    @Basic(optional = false)
+    @Column(name = "role")
     private String role;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<UserNotification> userNotificationSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<Payment> paymentSet;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<Registration> registrationSet;
 
     public User() {
@@ -79,13 +96,14 @@ public class User implements Serializable {
         this.email = email;
         this.role = role;
     }
-    public User(String username, String password, String firstName, String lastName, String email,String phone, String role) {
+    
+    public User(String username, String password, String firstName, String lastName, String email,String numberPhone, String role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phone = phone;
         this.email = email;
+        this.phone = numberPhone;
         this.role = role;
     }
 
@@ -95,6 +113,22 @@ public class User implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -153,6 +187,14 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    public Set<UserNotification> getUserNotificationSet() {
+        return userNotificationSet;
+    }
+
+    public void setUserNotificationSet(Set<UserNotification> userNotificationSet) {
+        this.userNotificationSet = userNotificationSet;
+    }
+
     public Set<Payment> getPaymentSet() {
         return paymentSet;
     }
@@ -193,33 +235,5 @@ public class User implements Serializable {
     public String toString() {
         return "com.ntn.pojo.User[ id=" + id + " ]";
     }
-
-    /**
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param username the username to set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    
 }

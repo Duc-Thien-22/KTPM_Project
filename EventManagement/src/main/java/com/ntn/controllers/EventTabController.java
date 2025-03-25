@@ -73,6 +73,7 @@ public class EventTabController implements Initializable {
     private final Map<String, Integer> venuesId = new HashMap<>();
     private final VenueServices venueServies = new VenueServices();
     private final EventServices eventServices = new EventServices();
+    private final int ONE_HOUR = 24 * 60 * 60 * 1000;
 
     /**
      * Initializes the controller class.
@@ -161,9 +162,15 @@ public class EventTabController implements Initializable {
                 });
 
                 btnUpdate.setOnAction(evt -> {
+
+                    Timestamp timestamp = new Timestamp(new Date().getTime());
                     Event e = (Event) ((TableRow) ((Button) evt.getSource()).getParent().getParent().getParent()).getItem();
-                    System.out.println(e.getIsActive());
                     if (e.getIsActive()) {
+                        if (e.getStartDate().getTime() - timestamp.getTime() < ONE_HOUR) {
+                            Utils.getAlert(AlertType.ERROR, "Sự kiện không được chỉnh sau 24h");
+                            return;
+                        }
+
                         eventIdSelected = e.getId();
                         loadDataUpdateEvent(e);
                         if (!btnUpdateEvent.isVisible()) {
@@ -269,12 +276,11 @@ public class EventTabController implements Initializable {
         return null;
     }
 
-    ;
     
     public void createEventHanlder(ActionEvent e) throws SQLException {
         Event event = getEventValid();
         if (event != null) {
-            int rs = this.eventServices.createEvent(event);
+            int rs = this.eventServices.addEvent(event);
 
             Utils.getAlert(
                     rs > 0 ? AlertType.INFORMATION : AlertType.WARNING,
@@ -293,9 +299,9 @@ public class EventTabController implements Initializable {
                 "Bạn có chắc muốn xóa sự kiện này?",
                 ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
-
-        if (id != 0) {
-            if (alert.getResult() == ButtonType.YES) {
+        
+        if (alert.getResult() == ButtonType.YES) {
+            if (id != 0) {
                 int rs = this.eventServices.deleteEventById(id);
                 Utils.getAlert(
                         rs > 0 ? AlertType.INFORMATION : AlertType.WARNING,

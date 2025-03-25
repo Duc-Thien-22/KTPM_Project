@@ -7,41 +7,53 @@ package com.ntn.pojo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author NHAT
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "venue")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "Venue.findAll", query = "SELECT v FROM Venue v"),
-    @javax.persistence.NamedQuery(name = "Venue.findById", query = "SELECT v FROM Venue v WHERE v.id = :id"),
-    @javax.persistence.NamedQuery(name = "Venue.findByName", query = "SELECT v FROM Venue v WHERE v.name = :name"),
-    @javax.persistence.NamedQuery(name = "Venue.findByCapacity", query = "SELECT v FROM Venue v WHERE v.capacity = :capacity"),
-    @javax.persistence.NamedQuery(name = "Venue.findByCreatedDate", query = "SELECT v FROM Venue v WHERE v.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "Venue.findByUpdatedDate", query = "SELECT v FROM Venue v WHERE v.updatedDate = :updatedDate")})
+@Entity
+@Table(name = "venue")
+@NamedQueries({
+    @NamedQuery(name = "Venue.findAll", query = "SELECT v FROM Venue v"),
+    @NamedQuery(name = "Venue.findById", query = "SELECT v FROM Venue v WHERE v.id = :id"),
+    @NamedQuery(name = "Venue.findByName", query = "SELECT v FROM Venue v WHERE v.name = :name"),
+    @NamedQuery(name = "Venue.findByCapacity", query = "SELECT v FROM Venue v WHERE v.capacity = :capacity"),
+    @NamedQuery(name = "Venue.findByCreatedDate", query = "SELECT v FROM Venue v WHERE v.createdDate = :createdDate"),
+    @NamedQuery(name = "Venue.findByUpdatedDate", query = "SELECT v FROM Venue v WHERE v.updatedDate = :updatedDate")})
 public class Venue implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "name")
+    @Basic(optional = false)
+    @Column(name = "name")
     private String name;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "capacity")
+    @Basic(optional = false)
+    @Column(name = "capacity")
     private int capacity;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @javax.persistence.OneToMany(mappedBy = "venueId")
+    @OneToMany(mappedBy = "venueId")
     private Set<Event> eventSet;
 
     public Venue() {
@@ -56,7 +68,7 @@ public class Venue implements Serializable {
         this.name = name;
         this.capacity = capacity;
     }
-
+    
     public Integer getId() {
         return id;
     }
