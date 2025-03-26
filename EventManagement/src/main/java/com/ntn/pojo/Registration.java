@@ -4,9 +4,13 @@
  */
 package com.ntn.pojo;
 
+import com.ntn.pojo.Ticket;
+import com.ntn.pojo.User;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,6 +50,8 @@ public class Registration implements Serializable {
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
+    private Set<Payment> paymentSet;
     @JoinColumn(name = "ticket_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Ticket ticketId;
@@ -81,6 +88,14 @@ public class Registration implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public Set<Payment> getPaymentSet() {
+        return paymentSet;
+    }
+
+    public void setPaymentSet(Set<Payment> paymentSet) {
+        this.paymentSet = paymentSet;
     }
 
     public Ticket getTicketId() {
@@ -121,7 +136,7 @@ public class Registration implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.Registration[ id=" + id + " ]";
+        return "com.cnatro.pojo.Registration[ id=" + id + " ]";
     }
     
 }

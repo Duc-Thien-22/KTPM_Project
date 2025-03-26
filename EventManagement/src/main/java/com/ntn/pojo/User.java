@@ -76,8 +76,6 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<UserNotification> userNotificationSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<Payment> paymentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<Registration> registrationSet;
 
     public User() {
@@ -185,14 +183,6 @@ public class User implements Serializable {
         this.userNotificationSet = userNotificationSet;
     }
 
-    public Set<Payment> getPaymentSet() {
-        return paymentSet;
-    }
-
-    public void setPaymentSet(Set<Payment> paymentSet) {
-        this.paymentSet = paymentSet;
-    }
-
     public Set<Registration> getRegistrationSet() {
         return registrationSet;
     }
@@ -223,7 +213,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.User[ id=" + id + " ]";
+        return "com.cnatro.pojo.User[ id=" + id + " ]";
     }
     
 }

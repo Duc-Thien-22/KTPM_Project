@@ -79,8 +79,6 @@ public class Event implements Serializable {
     private Set<Notification> notificationSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
     private Set<Ticket> ticketSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
-    private Set<Payment> paymentSet;
     @JoinColumn(name = "venue_id", referencedColumnName = "id")
     @ManyToOne
     private Venue venue;
@@ -179,14 +177,6 @@ public class Event implements Serializable {
 
     public void setTicketSet(Set<Ticket> ticketSet) {
         this.ticketSet = ticketSet;
-    }
-
-    public Set<Payment> getPaymentSet() {
-        return paymentSet;
-    }
-
-    public void setPaymentSet(Set<Payment> paymentSet) {
-        this.paymentSet = paymentSet;
     }
 
     public Venue getVenue() {

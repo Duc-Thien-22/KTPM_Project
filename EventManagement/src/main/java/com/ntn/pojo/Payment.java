@@ -30,7 +30,6 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
     @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
-    @NamedQuery(name = "Payment.findByTicketQuantity", query = "SELECT p FROM Payment p WHERE p.ticketQuantity = :ticketQuantity"),
     @NamedQuery(name = "Payment.findByTotalAmount", query = "SELECT p FROM Payment p WHERE p.totalAmount = :totalAmount"),
     @NamedQuery(name = "Payment.findByIsPayment", query = "SELECT p FROM Payment p WHERE p.isPayment = :isPayment"),
     @NamedQuery(name = "Payment.findByCreatedDate", query = "SELECT p FROM Payment p WHERE p.createdDate = :createdDate"),
@@ -43,9 +42,6 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "ticket_quantity")
-    private int ticketQuantity;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(name = "total_amount")
@@ -58,12 +54,9 @@ public class Payment implements Serializable {
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JoinColumn(name = "registration_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Event eventId;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private User userId;
+    private Registration registrationId;
 
     public Payment() {
     }
@@ -72,9 +65,8 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Payment(Integer id, int ticketQuantity, BigDecimal totalAmount) {
+    public Payment(Integer id, BigDecimal totalAmount) {
         this.id = id;
-        this.ticketQuantity = ticketQuantity;
         this.totalAmount = totalAmount;
     }
 
@@ -84,14 +76,6 @@ public class Payment implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getTicketQuantity() {
-        return ticketQuantity;
-    }
-
-    public void setTicketQuantity(int ticketQuantity) {
-        this.ticketQuantity = ticketQuantity;
     }
 
     public BigDecimal getTotalAmount() {
@@ -126,20 +110,12 @@ public class Payment implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Event getEventId() {
-        return eventId;
+    public Registration getRegistrationId() {
+        return registrationId;
     }
 
-    public void setEventId(Event eventId) {
-        this.eventId = eventId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setRegistrationId(Registration registrationId) {
+        this.registrationId = registrationId;
     }
 
     @Override
@@ -164,7 +140,7 @@ public class Payment implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.Payment[ id=" + id + " ]";
+        return "com.cnatro.pojo.Payment[ id=" + id + " ]";
     }
     
 }

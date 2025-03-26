@@ -25,6 +25,7 @@ import java.util.Map;
  */
 public class ListEventService {
 
+    //lay thong tin su kien
     public List<Event> getEvent() throws SQLException {
         List<Event> events = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConnection()) {
@@ -58,29 +59,14 @@ public class ListEventService {
         return events;
     }
 
-//    public List<Ticket> getTicketEvent() throws SQLException {
-//        List<Ticket> tickets = new ArrayList<>();
-//        try (Connection conn = JdbcUtils.getConnection()) {
-//            PreparedStatement stm = conn.prepareStatement(
-//                    "SELECT ticket.id as ticket_id, ticket."
-//            );
-//
-//            ResultSet rs = stm.executeQuery();
-//
-//            while (rs.next()) {
-//
-//            }
-//        }
-//        return tickets;
-//    }
-
+    //lay thong tin ve
     public Map<String, Object[]> getTicketInfo(int eventId) {
         Map<String, Object[]> ticketInfo = new HashMap<>();
         try (Connection conn = JdbcUtils.getConnection()) {
             String sql = "Select tt.name as ticket_type, t.quantity as ticket_quantity, t.price as ticket_price "
-                + "FROM ticket t "
-                + "JOIN tickettype tt ON t.ticket_type_id = tt.id "
-                + "WHERE t.event_id = ? ";
+                    + "FROM ticket t "
+                    + "JOIN tickettype tt ON t.ticket_type_id = tt.id "
+                    + "WHERE t.event_id = ? ";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, eventId);
             ResultSet rs = stmt.executeQuery();
@@ -89,7 +75,7 @@ public class ListEventService {
                 String type = rs.getString("ticket_type");
                 int quantity = rs.getInt("ticket_quantity");
                 BigDecimal price = rs.getBigDecimal("ticket_price");
-                ticketInfo.put(type,new Object[]{quantity,price});
+                ticketInfo.put(type, new Object[]{quantity, price});
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,4 +83,97 @@ public class ListEventService {
 
         return ticketInfo;
     }
+//    // cap nhat so luong ve sau khi thanh toan
+//    public boolean updateTicketQuantity(int eventId, String TicketType){
+//        try (Connection conn = JdbcUtils.getConnection()) {
+//            String sql = "UPDATE ticket JOIN tickettype on tickettype.id = ticket.ticket_type_id "
+//                    + "SET quantity = quantity - 1 "
+//                    + "WHERE ticket.event_id = ? "
+//                    + "AND tickettype.name LIKE ? "
+//                    + "And quantity > 0 ";
+//            PreparedStatement stm = conn.prepareStatement(sql);
+//            stm.setInt(1, eventId);
+//            stm.setString(2, TicketType);
+//            int rs = stm.executeUpdate();
+//            return rs > 0;
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    public boolean processPayment(int eventId, String ticketType, int userId) {
+        try (Connection conn = JdbcUtils.getConnection()) {
+            conn.setAutoCommit(false); // Bắt đầu transaction
+
+            // Lấy ticket_id từ eventId và ticketType
+            String getTicketIdSQL = "SELECT t.id FROM ticket t "
+                    + "JOIN tickettype tt ON t.ticket_type_id = tt.id "
+                    + "WHERE t.event_id = ? AND tt.name = ? AND t.quantity > 0 LIMIT 1";
+            PreparedStatement getTicketIdStmt = conn.prepareStatement(getTicketIdSQL);
+            getTicketIdStmt.setInt(1, eventId);
+            getTicketIdStmt.setString(2, ticketType);
+            ResultSet rs = getTicketIdStmt.executeQuery();
+
+            if (!rs.next()) {
+                conn.rollback(); // Hủy transaction nếu không tìm thấy vé
+                return false;
+            }
+
+            int ticketId = rs.getInt("id");
+
+            // Cập nhật số lượng vé
+            String updateTicketSQL = "UPDATE ticket SET quantity = quantity - 1 WHERE id = ?";
+            PreparedStatement updateTicketStmt = conn.prepareStatement(updateTicketSQL);
+            updateTicketStmt.setInt(1, ticketId);
+            int ticketUpdated = updateTicketStmt.executeUpdate();
+            if (ticketUpdated == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // Thêm vào bảng registration
+            String insertRegistrationSQL = "INSERT INTO registration (user_id, ticket_id, created_date, updated_date) "
+                    + "VALUES (?, ?, NOW(), NOW())";
+            PreparedStatement insertRegStmt = conn.prepareStatement(insertRegistrationSQL, PreparedStatement.RETURN_GENERATED_KEYS);
+            insertRegStmt.setInt(1, userId);
+            insertRegStmt.setInt(2, ticketId);
+            int regInserted = insertRegStmt.executeUpdate();
+
+            if (regInserted == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            // Lấy registration_id vừa tạo
+            ResultSet regKeys = insertRegStmt.getGeneratedKeys();
+            int registrationId;
+            if (regKeys.next()) {
+                registrationId = regKeys.getInt(1);
+            } else {
+                conn.rollback();
+                return false;
+            }
+
+            // Thêm vào bảng payment
+            String insertPaymentSQL = "INSERT INTO payment (registration_id, is_payment, created_date, updated_date) "
+                    + "VALUES (?, 1, NOW(), NOW())";
+            PreparedStatement insertPayStmt = conn.prepareStatement(insertPaymentSQL);
+            insertPayStmt.setInt(1, registrationId);
+            int payInserted = insertPayStmt.executeUpdate();
+
+            if (payInserted == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            conn.commit(); // Xác nhận transaction
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

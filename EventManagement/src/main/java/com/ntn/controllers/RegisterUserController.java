@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -111,7 +112,9 @@ public class RegisterUserController implements Initializable {
 //            descriptionLabel.setWrapText(true);
             Button registerButton = new Button("Đăng ký tham gia");
             registerButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-
+            if (e.getMaxAttendees() - e.getRegisterUser() == 0) {
+                registerButton.setDisable(true);
+            }
             int e_id = e.getId();
             registerButton.setOnAction(event -> registerEvent(e_id));
             int eventId = e.getId();
@@ -131,6 +134,8 @@ public class RegisterUserController implements Initializable {
     }
 
     private void registerEvent(int eventId) {
+        //kiem tra nguoi dung da dang ky su kien co cung thoi gian khong
+
         // Tạo cửa sổ mới
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ chính
@@ -175,17 +180,64 @@ public class RegisterUserController implements Initializable {
         // Nút thanh toán
         Button payButton = new Button("Thanh toán");
         payButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+//        payButton.setOnAction(event -> {
+//            Toggle selectedToggle = ticketGroup.getSelectedToggle();
+//            RadioButton selectedButton = (RadioButton) selectedToggle;
+//            String ticketType = selectedButton.getText().split("\\s*\\(")[0];
+//            String ticketPrice = selectedButton.getUserData().toString();
+//
+//            boolean update = s.updateTicketQuantity(eventId, ticketType);
+//            if (update) {
+//                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+//                successAlert.setTitle("Thanh toán");
+//                successAlert.setHeaderText("Thanh toán thành công"); // Xóa tiêu đề mặc định
+//                successAlert.setContentText("Loại vé: " + ticketType + "\n" + "Giá tiền: " + ticketPrice);
+//                successAlert.showAndWait();
+//                popupStage.close();
+//                try {
+//                    getEvent(); // Cập nhật lại danh sách sự kiện để hiển thị số lượng vé mới
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            } else {
+//                Alert failAlert = new Alert(Alert.AlertType.ERROR);
+//                failAlert.setTitle("Thanh toán");
+//                failAlert.setHeaderText("Thanh toán không thành công, có thể đã hết vé!"); // Xóa tiêu đề mặc định
+//                failAlert.showAndWait();
+//                popupStage.close();
+//            }
+//        });
+
         payButton.setOnAction(event -> {
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Thanh toán thành công!", ButtonType.OK);
-            successAlert.showAndWait();
-            popupStage.close();
+            Toggle selectedToggle = ticketGroup.getSelectedToggle();
+
+            RadioButton selectedButton = (RadioButton) selectedToggle;
+            String ticketType = selectedButton.getText().split("\\s*\\(")[0];
+
+            int userId = 6; // Giả sử lấy userId từ session hoặc thông tin đăng nhập
+
+            boolean paymentSuccess = s.processPayment(eventId, ticketType, userId);
+
+            if (paymentSuccess) {
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Thanh toán thành công!", ButtonType.OK);
+                successAlert.showAndWait();
+                popupStage.close();
+                try {
+                    getEvent(); // Cập nhật lại danh sách sự kiện
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                Alert failAlert = new Alert(Alert.AlertType.ERROR, "Thanh toán không thành công. Hết vé hoặc lỗi hệ thống!", ButtonType.OK);
+                failAlert.showAndWait();
+            }
         });
 
         Button cancelButton = new Button("Hủy");
         cancelButton.setOnAction(event -> popupStage.close());
 
         // Bố cục nút bấm
-        HBox buttonBox = new HBox(10, cancelButton, payButton);
+        HBox buttonBox = new HBox(20, cancelButton, payButton);
         buttonBox.setAlignment(Pos.CENTER);
 
         // Layout
