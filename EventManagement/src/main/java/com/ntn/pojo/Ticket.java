@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author NHAT
+ * @author Duc Thien
  */
 @Entity
 @Table(name = "ticket")

@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ntn</groupId>
     <artifactId>EventManagement</artifactId>
@@ -90,13 +89,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running -->
-                        <!-- Usage: mvn clean javafx:run -->
+                        <!--  Default configuration for running  -->
+                        <!--  Usage: mvn clean javafx:run  -->
                         <id>default-cli</id>
                     </execution>
                     <execution>
-                        <!-- Configuration for manual attach debugging -->
-                        <!-- Usage: mvn clean javafx:run@debug -->
+                        <!--  Configuration for manual attach debugging  -->
+                        <!--  Usage: mvn clean javafx:run@debug  -->
                         <id>debug</id>
                         <configuration>
                             <options>
@@ -105,7 +104,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <!-- Configuration for automatic IDE debugging -->
+                        <!--  Configuration for automatic IDE debugging  -->
                         <id>ide-debug</id>
                         <configuration>
                             <options>
@@ -114,7 +113,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <!-- Configuration for automatic IDE profiling -->
+                        <!--  Configuration for automatic IDE profiling  -->
                         <id>ide-profile</id>
                         <configuration>
                             <options>
