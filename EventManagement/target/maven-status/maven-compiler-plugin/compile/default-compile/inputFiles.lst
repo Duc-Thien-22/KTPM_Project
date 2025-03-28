@@ -1,22 +1,22 @@
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\eventmanagement\ViewManager.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\JdbcUtils.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\eventmanagement\SessionManager.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\controllers\EventTabController.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Ticket.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\User.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\controllers\LoginController.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\services\UserServices.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\services\VenueServices.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\module-info.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Registration.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Tickettype.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\controllers\Utils.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\controllers\AddUserController.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\eventmanagement\ValidationUtils.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Event.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\eventmanagement\App.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Venue.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\controllers\ManageEventController.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Notification.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\services\EventServices.java
-C:\Users\NHAT\Code\JavaKTPM\ProjectCK\Project\EventManagement - main\src\main\java\com\ntn\pojo\Payment.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Event.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\ValidationUtils.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\User.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Tickettype.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\JdbcUtils.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\UserServices.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\LoginController.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\Utils.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Payment.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Ticket.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Notification.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\SessionManager.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\EventTabController.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\VenueServices.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\AddUserController.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\ViewManager.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\App.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\module-info.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\ManageEventController.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Registration.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Venue.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\EventServices.java
