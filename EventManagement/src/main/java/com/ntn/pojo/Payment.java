@@ -5,7 +5,6 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -30,9 +29,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
     @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
-    @NamedQuery(name = "Payment.findByTicketQuantity", query = "SELECT p FROM Payment p WHERE p.ticketQuantity = :ticketQuantity"),
-    @NamedQuery(name = "Payment.findByTotalAmount", query = "SELECT p FROM Payment p WHERE p.totalAmount = :totalAmount"),
     @NamedQuery(name = "Payment.findByIsPayment", query = "SELECT p FROM Payment p WHERE p.isPayment = :isPayment"),
+    @NamedQuery(name = "Payment.findByIsRefunded", query = "SELECT p FROM Payment p WHERE p.isRefunded = :isRefunded"),
     @NamedQuery(name = "Payment.findByCreatedDate", query = "SELECT p FROM Payment p WHERE p.createdDate = :createdDate"),
     @NamedQuery(name = "Payment.findByUpdatedDate", query = "SELECT p FROM Payment p WHERE p.updatedDate = :updatedDate")})
 public class Payment implements Serializable {
@@ -43,39 +41,25 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "ticket_quantity")
-    private int ticketQuantity;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
     @Column(name = "is_payment")
     private Boolean isPayment;
+    @Column(name = "is_refunded")
+    private Boolean isRefunded;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JoinColumn(name = "register_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Event eventId;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private User userId;
+    private Registration registerId;
 
     public Payment() {
     }
 
     public Payment(Integer id) {
         this.id = id;
-    }
-
-    public Payment(Integer id, int ticketQuantity, BigDecimal totalAmount) {
-        this.id = id;
-        this.ticketQuantity = ticketQuantity;
-        this.totalAmount = totalAmount;
     }
 
     public Integer getId() {
@@ -86,28 +70,20 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public int getTicketQuantity() {
-        return ticketQuantity;
-    }
-
-    public void setTicketQuantity(int ticketQuantity) {
-        this.ticketQuantity = ticketQuantity;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public Boolean getIsPayment() {
         return isPayment;
     }
 
     public void setIsPayment(Boolean isPayment) {
         this.isPayment = isPayment;
+    }
+
+    public Boolean getIsRefunded() {
+        return isRefunded;
+    }
+
+    public void setIsRefunded(Boolean isRefunded) {
+        this.isRefunded = isRefunded;
     }
 
     public Date getCreatedDate() {
@@ -126,20 +102,12 @@ public class Payment implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Event getEventId() {
-        return eventId;
+    public Registration getRegisterId() {
+        return registerId;
     }
 
-    public void setEventId(Event eventId) {
-        this.eventId = eventId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setRegisterId(Registration registerId) {
+        this.registerId = registerId;
     }
 
     @Override

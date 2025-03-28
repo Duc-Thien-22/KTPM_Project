@@ -73,10 +73,6 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "role")
     private String role;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<UserNotification> userNotificationSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<Payment> paymentSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<Registration> registrationSet;
 
@@ -97,7 +93,7 @@ public class User implements Serializable {
         this.role = role;
     }
     
-    public User(String username, String password, String firstName, String lastName, String email,String numberPhone, String role) {
+    public User(String username, String password, String firstName, String lastName, String email, String numberPhone, String role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -106,6 +102,7 @@ public class User implements Serializable {
         this.phone = numberPhone;
         this.role = role;
     }
+
 
     public Integer getId() {
         return id;
@@ -185,22 +182,6 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Set<UserNotification> getUserNotificationSet() {
-        return userNotificationSet;
-    }
-
-    public void setUserNotificationSet(Set<UserNotification> userNotificationSet) {
-        this.userNotificationSet = userNotificationSet;
-    }
-
-    public Set<Payment> getPaymentSet() {
-        return paymentSet;
-    }
-
-    public void setPaymentSet(Set<Payment> paymentSet) {
-        this.paymentSet = paymentSet;
     }
 
     public Set<Registration> getRegistrationSet() {

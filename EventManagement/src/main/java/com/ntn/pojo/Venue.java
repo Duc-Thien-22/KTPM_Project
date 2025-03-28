@@ -68,7 +68,7 @@ public class Venue implements Serializable {
         this.name = name;
         this.capacity = capacity;
     }
-    
+
     public Integer getId() {
         return id;
     }

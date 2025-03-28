@@ -5,6 +5,7 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -33,6 +34,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Ticket.findAll", query = "SELECT t FROM Ticket t"),
     @NamedQuery(name = "Ticket.findById", query = "SELECT t FROM Ticket t WHERE t.id = :id"),
     @NamedQuery(name = "Ticket.findByQuantity", query = "SELECT t FROM Ticket t WHERE t.quantity = :quantity"),
+    @NamedQuery(name = "Ticket.findByPrice", query = "SELECT t FROM Ticket t WHERE t.price = :price"),
     @NamedQuery(name = "Ticket.findByCreatedDate", query = "SELECT t FROM Ticket t WHERE t.createdDate = :createdDate"),
     @NamedQuery(name = "Ticket.findByUpdatedDate", query = "SELECT t FROM Ticket t WHERE t.updatedDate = :updatedDate")})
 public class Ticket implements Serializable {
@@ -46,6 +48,10 @@ public class Ticket implements Serializable {
     @Basic(optional = false)
     @Column(name = "quantity")
     private int quantity;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @Column(name = "price")
+    private BigDecimal price;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -68,9 +74,10 @@ public class Ticket implements Serializable {
         this.id = id;
     }
 
-    public Ticket(Integer id, int quantity) {
+    public Ticket(Integer id, int quantity, BigDecimal price) {
         this.id = id;
         this.quantity = quantity;
+        this.price = price;
     }
 
     public Integer getId() {
@@ -87,6 +94,14 @@ public class Ticket implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Date getCreatedDate() {

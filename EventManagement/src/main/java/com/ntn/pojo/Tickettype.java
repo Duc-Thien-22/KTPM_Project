@@ -5,7 +5,6 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -32,7 +31,6 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Tickettype.findAll", query = "SELECT t FROM Tickettype t"),
     @NamedQuery(name = "Tickettype.findById", query = "SELECT t FROM Tickettype t WHERE t.id = :id"),
     @NamedQuery(name = "Tickettype.findByName", query = "SELECT t FROM Tickettype t WHERE t.name = :name"),
-    @NamedQuery(name = "Tickettype.findByPrice", query = "SELECT t FROM Tickettype t WHERE t.price = :price"),
     @NamedQuery(name = "Tickettype.findByCreatedDate", query = "SELECT t FROM Tickettype t WHERE t.createdDate = :createdDate"),
     @NamedQuery(name = "Tickettype.findByUpdatedDate", query = "SELECT t FROM Tickettype t WHERE t.updatedDate = :updatedDate")})
 public class Tickettype implements Serializable {
@@ -46,10 +44,6 @@ public class Tickettype implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @Column(name = "price")
-    private BigDecimal price;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -66,10 +60,9 @@ public class Tickettype implements Serializable {
         this.id = id;
     }
 
-    public Tickettype(Integer id, String name, BigDecimal price) {
+    public Tickettype(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.price = price;
     }
 
     public Integer getId() {
@@ -86,14 +79,6 @@ public class Tickettype implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public Date getCreatedDate() {

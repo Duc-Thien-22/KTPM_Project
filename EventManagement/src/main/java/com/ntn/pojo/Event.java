@@ -16,8 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -43,7 +41,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Event.findByCreatedDate", query = "SELECT e FROM Event e WHERE e.createdDate = :createdDate"),
     @NamedQuery(name = "Event.findByUpdatedDate", query = "SELECT e FROM Event e WHERE e.updatedDate = :updatedDate")})
 public class Event implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,19 +66,12 @@ public class Event implements Serializable {
     private Boolean isActive;
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Timestamp createdDate;
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDate;
-    @JoinTable(name = "event_notification", joinColumns = {
-        @JoinColumn(name = "event_id", referencedColumnName = "id")}, inverseJoinColumns = {
-        @JoinColumn(name = "notification_id", referencedColumnName = "id")})
-    @ManyToMany
-    private Set<Notification> notificationSet;
+    private Timestamp updatedDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
     private Set<Ticket> ticketSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventId")
-    private Set<Payment> paymentSet;
     @JoinColumn(name = "venue_id", referencedColumnName = "id")
     @ManyToOne
     private Venue venue;
@@ -99,6 +90,15 @@ public class Event implements Serializable {
         this.endDate = endDate;
         this.maxAttendees = maxAttendees;
     }
+    public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees,boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.maxAttendees = maxAttendees;
+        this.isActive = isActive;
+    }
+    
     public Event(String name, Timestamp startDate, Timestamp endDate, int maxAttendees) {
         this.name = name;
         this.startDate = startDate;
@@ -106,16 +106,6 @@ public class Event implements Serializable {
         this.maxAttendees = maxAttendees;
     }
 
-    
-    public Event(Integer id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees, boolean is_active) {
-        this.id = id;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.maxAttendees = maxAttendees;
-        this.isActive = is_active;
-    }
-    
     public Integer getId() {
         return id;
     }
@@ -168,24 +158,16 @@ public class Event implements Serializable {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getUpdatedDate() {
+    public Timestamp getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(Timestamp updatedDate) {
         this.updatedDate = updatedDate;
-    }
-
-    public Set<Notification> getNotificationSet() {
-        return notificationSet;
-    }
-
-    public void setNotificationSet(Set<Notification> notificationSet) {
-        this.notificationSet = notificationSet;
     }
 
     public Set<Ticket> getTicketSet() {
@@ -196,20 +178,12 @@ public class Event implements Serializable {
         this.ticketSet = ticketSet;
     }
 
-    public Set<Payment> getPaymentSet() {
-        return paymentSet;
-    }
-
-    public void setPaymentSet(Set<Payment> paymentSet) {
-        this.paymentSet = paymentSet;
-    }
-
     public Venue getVenue() {
         return venue;
     }
 
-    public void setVenue(Venue venueId) {
-        this.venue = venueId;
+    public void setVenue(Venue venue) {
+        this.venue = venue;
     }
 
     @Override
@@ -234,7 +208,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.Event[ id=" + id + " ]";
+        return this.name;
     }
     
 }
