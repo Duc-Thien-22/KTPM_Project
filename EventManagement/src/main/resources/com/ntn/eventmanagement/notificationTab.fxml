@@ -9,7 +9,7 @@
 
 <VBox spacing="10"
       xmlns:fx="http://javafx.com/fxml/1"
-      >
+      fx:controller="com.ntn.controllers.NotificationTabController">
     <padding>
         <Insets top="10" right="15" bottom="10" left="15"/>
     </padding>
@@ -17,23 +17,22 @@
     <Label text="GỬI THÔNG BÁO VÀ NHẮC NHỞ" styleClass="section-label"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Chọn sự kiện:"/>
-        <ListView fx:id="notificationEventListView" prefWidth="300"
-                  selectionModel="${multiple}"/>
+        <Label text="Sự kiện:"/>
+        <ComboBox fx:id="cbEvents" promptText="Chọn sự kiện" GridPane.columnIndex="1" GridPane.rowIndex="3" />
     </HBox>
 
     <Label text="Nội dung thông báo:"/>
-    <TextArea fx:id="notificationMessageArea" prefHeight="100" promptText="Nhập nội dung thông báo hoặc nhắc nhở..."/>
+    <TextArea fx:id="txtContentNotification" prefHeight="100" promptText="Nhập nội dung thông báo hoặc nhắc nhở..."/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button fx:id="sendNotificationButton" text="Gửi Thông Báo"
+        <Button fx:id="btnSendNotification" text="Gửi Thông Báo" onAction="#sendNotificationHandler"
                 styleClass="primary-button"/>
-        <Button fx:id="sendReminderButton" text="Gửi Nhắc Nhở"/>
-        <Button fx:id="cancelEventButton" text="Hủy Sự Kiện" styleClass="danger-button"/>
+        <Button fx:id="refesh" text="Làm mới"
+                styleClass="primary-button" onAction="#refeshHandler"/>
     </HBox>
 
     <Label text="Lịch sử thông báo:" styleClass="list-label"/>
-    <ListView fx:id="notificationListView" VBox.vgrow="ALWAYS"/>
+    <TableView fx:id="tbHistoryNotifications" prefHeight="0.0" prefWidth="570.0" VBox.vgrow="ALWAYS" />
 
     <Label fx:id="notificationStatusLabel" styleClass="status-label"/>
 </VBox>

@@ -19,7 +19,7 @@ import java.util.List;
  * @author NHAT
  */
 public class VenueServices {
-    
+
     public List<Venue> getVenues() throws SQLException {
         List<Venue> venues = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConnection()) {
@@ -30,7 +30,7 @@ public class VenueServices {
             while (rs.next()) {
                 Venue v = new Venue(rs.getInt("id"), rs.getString("name"), rs.getInt("capacity"));
                 venues.add(v);
-}
+            }
         }
 
         return venues;
