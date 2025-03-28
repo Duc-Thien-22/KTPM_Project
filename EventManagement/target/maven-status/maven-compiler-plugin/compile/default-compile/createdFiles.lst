@@ -12,10 +12,13 @@ com\ntn\services\VenueServices.class
 module-info.class
 com\ntn\pojo\Notification.class
 com\ntn\pojo\Tickettype.class
+com\ntn\controllers\NotificationTabController.class
 com\ntn\eventmanagement\App.class
+com\ntn\services\NotificationServices.class
 com\ntn\pojo\JdbcUtils.class
 com\ntn\controllers\EventTabController$1.class
 com\ntn\pojo\Ticket.class
+com\ntn\pojo\DTO\NotificationDTO.class
 com\ntn\pojo\Venue.class
 com\ntn\eventmanagement\ValidationUtils.class
 com\ntn\services\UserServices.class

@@ -4,6 +4,7 @@
  */
 package com.ntn.controllers;
 
+import com.ntn.pojo.Event;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,5 +49,14 @@ public class Utils {
         LocalDateTime dateTime = date.toLocalDateTime();
         return dateTime.format(formatter);
     }
-
+    
+    
+    public static String getContentNotification(String message,Event e){
+        return String.format("%s - Sự kiện : %s - Thời gian : %s đến %s - Địa điểm : -%s", 
+                message, 
+                e.getName(),
+                formatedDate(e.getStartDate()),
+                formatedDate(e.getEndDate()),
+                e.getVenue().getName());
+    }
 }

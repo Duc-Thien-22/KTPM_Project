@@ -7,6 +7,7 @@ package com.ntn.controllers;
 import com.ntn.pojo.Event;
 import com.ntn.pojo.Venue;
 import com.ntn.services.EventServices;
+import com.ntn.services.NotificationServices;
 import com.ntn.services.VenueServices;
 import java.net.URL;
 import java.sql.SQLException;
@@ -73,6 +74,7 @@ public class EventTabController implements Initializable {
     private final Map<String, Integer> venuesId = new HashMap<>();
     private final VenueServices venueServies = new VenueServices();
     private final EventServices eventServices = new EventServices();
+    private final NotificationServices notificationServices = new NotificationServices();
     private final int ONE_HOUR = 24 * 60 * 60 * 1000;
 
     /**
@@ -149,7 +151,8 @@ public class EventTabController implements Initializable {
         colDelAction.setCellFactory(col -> new TableCell<>() {
             private Button btnDel = new Button("Xóa");
             private Button btnUpdate = new Button("Cập nhật");
-            private HBox hbox = new HBox(5, btnUpdate, btnDel);
+            private Button btnDestroy = new Button("Hủy");
+            private HBox hbox = new HBox(5, btnUpdate, btnDel, btnDestroy);
 
             {
                 btnDel.setOnAction(evt -> {
@@ -186,9 +189,20 @@ public class EventTabController implements Initializable {
                         Utils.getAlert(AlertType.WARNING, "Sự kiện đã hết hạn !!");
                     }
                 });
+
+                btnDestroy.setOnAction(evt -> {
+
+                    Event e = (Event) ((TableRow) ((Button) evt.getSource()).getParent().getParent().getParent()).getItem();
+                    if (e.getIsActive()) {
+                        destroyEvent(e);
+                    } else {
+                        Utils.getAlert(AlertType.WARNING, "Sự kiện đã hết hạn !!");
+                    }
+                });
             }
 
             @Override
+
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 setGraphic(empty ? null : hbox);
@@ -276,7 +290,6 @@ public class EventTabController implements Initializable {
         return null;
     }
 
-    
     public void createEventHanlder(ActionEvent e) throws SQLException {
         Event event = getEventValid();
         if (event != null) {
@@ -299,7 +312,7 @@ public class EventTabController implements Initializable {
                 "Bạn có chắc muốn xóa sự kiện này?",
                 ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
-        
+
         if (alert.getResult() == ButtonType.YES) {
             if (id != 0) {
                 int rs = this.eventServices.deleteEventById(id);
@@ -344,6 +357,8 @@ public class EventTabController implements Initializable {
 
             if (rs > 0) {
                 this.loadEvent("");
+                this.notificationServices.sendNotificationForUser(
+                        Utils.getContentNotification("Cập nhật", event), "UPDATE", event.getId());
                 this.toggleButton(this.btnCreateEvent);
                 this.toggleButton(this.btnUpdateEvent);
                 clearFields();
@@ -362,14 +377,6 @@ public class EventTabController implements Initializable {
     public void clearDateTimeFields(DatePicker datePicker, TextField timeField) {
         datePicker.setValue(null);
         timeField.clear();
-    }
-
-    public void clearFields() {
-        this.eventNameField.clear();
-        this.clearDateTimeFields(this.startDatePicker, this.startTimeField);
-        this.clearDateTimeFields(this.endDatePicker, this.endTimeField);
-        this.cbVenues.setValue(null);
-        this.eventCapacityField.clear();
     }
 
     public boolean isNumeric(String str) {
@@ -394,5 +401,45 @@ public class EventTabController implements Initializable {
                 this.eventServices.updateEventById(e);
             }
         }
+    }
+
+    public void destroyEvent(Event e) {
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        if (e.getStartDate().getTime() - timestamp.getTime() < ONE_HOUR) {
+            Utils.getAlert(AlertType.ERROR, "Sự kiện không được hủy sau 24h");
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Bạn có chắc muốn hủy sự kiện này?",
+                ButtonType.YES, ButtonType.NO);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            try {
+                // cập nhật trạng thái
+                e.setIsActive(Boolean.FALSE);
+                eventServices.updateEventById(e);
+                
+                // gửi thông báo
+                notificationServices.sendNotificationForUser(
+                        Utils.getContentNotification("Hủy", e), "DELETE", e.getId());
+                loadEvent("");
+                
+                //hoàn tiền 
+                this.eventServices.refundeMoneyToUsers(this.eventServices.getRegisterByEventId(e.getId()));
+                
+                Utils.getAlert(AlertType.INFORMATION, "Đã hủy sự kiện thành công!!");
+            } catch (SQLException ex) {
+                Logger.getLogger(EventTabController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void clearFields() {
+        this.eventNameField.clear();
+        this.clearDateTimeFields(this.startDatePicker, this.startTimeField);
+        this.clearDateTimeFields(this.endDatePicker, this.endTimeField);
+        this.cbVenues.setValue(null);
+        this.eventCapacityField.clear();
     }
 }

@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -46,7 +47,23 @@ public class EventServices {
 
         return events;
     }
+    public List<Event> getEvents() throws SQLException {
+        List<Event> events = new ArrayList<>();
+        try (Connection conn = JdbcUtils.getConnection()) {
+            String sql = "SELECT*FROM event WHERE is_active = True";
+            PreparedStatement stm = conn.prepareCall(sql);
 
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                VenueServices v = new VenueServices();
+                Event e = new Event(rs.getInt("id"), rs.getString("name"), rs.getTimestamp("start_date"), rs.getTimestamp("end_date"), rs.getInt("max_attendees"), rs.getBoolean("is_active"));
+                e.setVenue(v.getVenueById(rs.getInt("venue_id")));
+                events.add(e);
+            }
+        }
+
+        return events;
+    }
     public int addEvent(Event e) throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
             String sql = "INSERT INTO event (name, start_date, end_date, max_attendees, venue_id) VALUES (?, ?, ?, ?, ?)";
@@ -112,11 +129,11 @@ public class EventServices {
         return rs;
     }
 
-    public List<Integer> getUsersRegisterByEventId(int eventId) throws SQLException {
-        List<Integer> usersId = new ArrayList<>();
+    public List<Integer> getRegisterByEventId(int eventId) throws SQLException {
+        List<Integer> registerIds = new ArrayList<>();
 
         try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "SELECT registration.user_id FROM event "
+            String sql = "SELECT registration.id FROM event "
                     + "JOIN ticket ON event.id = ticket.event_id "
                     + "JOIN registration ON registration.ticket_id = ticket.id "
                     + "WHERE event.id = ?";
@@ -125,9 +142,28 @@ public class EventServices {
             stm.setInt(1, eventId);
             ResultSet rs = stm.executeQuery();
             while(rs.next()){
-                usersId.add(rs.getInt("user_id"));
+                registerIds.add(rs.getInt("id"));
             }   
         }
-        return usersId;
+        return registerIds;
+    }
+    
+    public void refundeMoneyToUsers(List<Integer>registerIds) throws SQLException{
+        try (Connection conn = JdbcUtils.getConnection()) {
+            if (!registerIds.isEmpty()) {
+                String placeholders = registerIds.stream()
+                        .map(id -> "?") // Tạo ?,?,?
+                        .collect(Collectors.joining(", "));
+                
+                String sql = "UPDATE payment SET is_refunded = 1 WHERE register_id IN (" + placeholders + ")";
+                
+                PreparedStatement stm = conn.prepareCall(sql);
+                
+                for (int i = 0; i < registerIds.size(); i++) {
+                    stm.setInt(i + 1, registerIds.get(i));
+                }
+                stm.executeUpdate();
+            }
+        }
     }
 }
