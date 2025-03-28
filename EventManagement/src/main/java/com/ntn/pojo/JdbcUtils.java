@@ -23,7 +23,7 @@ public class JdbcUtils {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost/eventmanagement", "root", "Admin123@");
+        return DriverManager.getConnection("jdbc:mysql://localhost/eventmanagement", "root", "Admin@123");
     }
 
 }
