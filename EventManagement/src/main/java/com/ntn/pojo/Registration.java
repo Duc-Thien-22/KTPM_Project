@@ -6,40 +6,57 @@ package com.ntn.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author NHAT
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "registration")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "Registration.findAll", query = "SELECT r FROM Registration r"),
-    @javax.persistence.NamedQuery(name = "Registration.findById", query = "SELECT r FROM Registration r WHERE r.id = :id"),
-    @javax.persistence.NamedQuery(name = "Registration.findByCreatedDate", query = "SELECT r FROM Registration r WHERE r.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "Registration.findByUpdatedDate", query = "SELECT r FROM Registration r WHERE r.updatedDate = :updatedDate")})
+@Entity
+@Table(name = "registration")
+@NamedQueries({
+    @NamedQuery(name = "Registration.findAll", query = "SELECT r FROM Registration r"),
+    @NamedQuery(name = "Registration.findById", query = "SELECT r FROM Registration r WHERE r.id = :id"),
+    @NamedQuery(name = "Registration.findByCreatedDate", query = "SELECT r FROM Registration r WHERE r.createdDate = :createdDate"),
+    @NamedQuery(name = "Registration.findByUpdatedDate", query = "SELECT r FROM Registration r WHERE r.updatedDate = :updatedDate")})
 public class Registration implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @javax.persistence.JoinColumn(name = "event_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne(optional = false)
-    private Event eventId;
-    @javax.persistence.JoinColumn(name = "ticket_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne(optional = false)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registerId")
+    private Set<Notification> notificationSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registerId")
+    private Set<Payment> paymentSet;
+    @JoinColumn(name = "ticket_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private Ticket ticketId;
-    @javax.persistence.JoinColumn(name = "user_id", referencedColumnName = "id")
-    @javax.persistence.ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
     private User userId;
 
     public Registration() {
@@ -73,12 +90,20 @@ public class Registration implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Event getEventId() {
-        return eventId;
+    public Set<Notification> getNotificationSet() {
+        return notificationSet;
     }
 
-    public void setEventId(Event eventId) {
-        this.eventId = eventId;
+    public void setNotificationSet(Set<Notification> notificationSet) {
+        this.notificationSet = notificationSet;
+    }
+
+    public Set<Payment> getPaymentSet() {
+        return paymentSet;
+    }
+
+    public void setPaymentSet(Set<Payment> paymentSet) {
+        this.paymentSet = paymentSet;
     }
 
     public Ticket getTicketId() {

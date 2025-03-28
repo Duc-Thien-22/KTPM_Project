@@ -5,11 +5,12 @@
     <class>com.ntn.pojo.Notification</class>
     <class>com.ntn.pojo.Venue</class>
     <class>com.ntn.pojo.User</class>
-    <class>com.ntn.pojo.Event</class>
     <class>com.ntn.pojo.Tickettype</class>
     <class>com.ntn.pojo.Registration</class>
     <class>com.ntn.pojo.Ticket</class>
     <class>com.ntn.pojo.Payment</class>
+    <class>com.ntn.pojo.UserNotification</class>
+    <class>com.ntn.pojo.Event</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/eventmanagement?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

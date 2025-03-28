@@ -5,45 +5,52 @@
 package com.ntn.pojo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author NHAT
  */
-@javax.persistence.Entity
-@javax.persistence.Table(name = "tickettype")
-@javax.persistence.NamedQueries({
-    @javax.persistence.NamedQuery(name = "Tickettype.findAll", query = "SELECT t FROM Tickettype t"),
-    @javax.persistence.NamedQuery(name = "Tickettype.findById", query = "SELECT t FROM Tickettype t WHERE t.id = :id"),
-    @javax.persistence.NamedQuery(name = "Tickettype.findByName", query = "SELECT t FROM Tickettype t WHERE t.name = :name"),
-    @javax.persistence.NamedQuery(name = "Tickettype.findByPrice", query = "SELECT t FROM Tickettype t WHERE t.price = :price"),
-    @javax.persistence.NamedQuery(name = "Tickettype.findByCreatedDate", query = "SELECT t FROM Tickettype t WHERE t.createdDate = :createdDate"),
-    @javax.persistence.NamedQuery(name = "Tickettype.findByUpdatedDate", query = "SELECT t FROM Tickettype t WHERE t.updatedDate = :updatedDate")})
+@Entity
+@Table(name = "tickettype")
+@NamedQueries({
+    @NamedQuery(name = "Tickettype.findAll", query = "SELECT t FROM Tickettype t"),
+    @NamedQuery(name = "Tickettype.findById", query = "SELECT t FROM Tickettype t WHERE t.id = :id"),
+    @NamedQuery(name = "Tickettype.findByName", query = "SELECT t FROM Tickettype t WHERE t.name = :name"),
+    @NamedQuery(name = "Tickettype.findByCreatedDate", query = "SELECT t FROM Tickettype t WHERE t.createdDate = :createdDate"),
+    @NamedQuery(name = "Tickettype.findByUpdatedDate", query = "SELECT t FROM Tickettype t WHERE t.updatedDate = :updatedDate")})
 public class Tickettype implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
     private Integer id;
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "name")
+    @Basic(optional = false)
+    @Column(name = "name")
     private String name;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @javax.persistence.Basic(optional = false)
-    @javax.persistence.Column(name = "price")
-    private BigDecimal price;
-    @javax.persistence.Column(name = "created_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @javax.persistence.Column(name = "updated_date")
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Column(name = "updated_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @javax.persistence.OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "ticketTypeId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticketTypeId")
     private Set<Ticket> ticketSet;
 
     public Tickettype() {
@@ -53,10 +60,9 @@ public class Tickettype implements Serializable {
         this.id = id;
     }
 
-    public Tickettype(Integer id, String name, BigDecimal price) {
+    public Tickettype(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.price = price;
     }
 
     public Integer getId() {
@@ -73,14 +79,6 @@ public class Tickettype implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public Date getCreatedDate() {
