@@ -13,11 +13,14 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    private static Scene scene;
+    private static Scene scene;// trong JavaFX chứa tất cả nội dung hiển thị của cửa sổ ứng dụng.
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("registerUser"), 640, 480);
+        
+        ViewManager.setPrivateScene(stage);
+        
+        scene = new Scene(loadFXML("login"));
         stage.setScene(scene);
         stage.show();
     }
@@ -34,5 +37,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

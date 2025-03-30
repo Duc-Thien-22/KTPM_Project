@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -106,13 +107,13 @@
                             </padding>
                             
                             <Label text="Họ tên:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                            
+                            <Label fx:id="lbUsername"  GridPane.columnIndex="1" />
                             <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                            
-                            <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                            <Label text="Nhân" GridPane.columnIndex="1" />
-                            <Label text="nhan@gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <Label text="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label fx:id="lbEmail" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" /> 
+                            <Label fx:id="lbPhone" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Đăng xuất" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                                onAction="#logoutHandler"                            />
                             <columnConstraints>
                                 <ColumnConstraints />
                                 <ColumnConstraints />
