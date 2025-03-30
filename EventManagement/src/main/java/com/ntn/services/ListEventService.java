@@ -26,38 +26,81 @@ import java.util.Map;
 public class ListEventService {
 
     //lay thong tin su kien
-    public List<Event> getEvent() throws SQLException {
-        List<Event> events = new ArrayList<>();
-        try (Connection conn = JdbcUtils.getConnection()) {
-            PreparedStatement stm = conn.prepareStatement(
-                    "SELECT e.id AS event_id, e.name AS event_name, e.start_date, e.end_date, e.max_attendees, "
-                    + "v.id AS venue_id, v.name AS venue_name, "
-                    + "(e.max_attendees - COALESCE(SUM(t.quantity), 0)) AS registerUser " // Đếm số lượng đăng ký, tránh NULL
-                    + "FROM event e "
-                    + "JOIN venue v ON e.venue_id = v.id "
-                    + "LEFT JOIN ticket t ON t.event_id = e.id "
-                    + "WHERE e.is_active = 1 "
-                    + "GROUP BY e.id, e.name, e.start_date, e.end_date, e.max_attendees, v.id, v.name " // Đảm bảo GROUP BY
-            );
+//    public List<Event> getEvent() throws SQLException {
+//        List<Event> events = new ArrayList<>();
+//        try (Connection conn = JdbcUtils.getConnection()) {
+//            PreparedStatement stm = conn.prepareStatement(
+//                    "SELECT e.id AS event_id, e.name AS event_name, e.start_date, e.end_date, e.max_attendees, "
+//                    + "v.id AS venue_id, v.name AS venue_name, "
+//                    + "(e.max_attendees - COALESCE(SUM(t.quantity), 0)) AS registerUser " // Đếm số lượng đăng ký, tránh NULL
+//                    + "FROM event e "
+//                    + "JOIN venue v ON e.venue_id = v.id "
+//                    + "LEFT JOIN ticket t ON t.event_id = e.id "
+//                    + "WHERE e.is_active = 1 "
+//                    + "GROUP BY e.id, e.name, e.start_date, e.end_date, e.max_attendees, v.id, v.name " // Đảm bảo GROUP BY
+//            );
+//
+//            ResultSet rs = stm.executeQuery();
+//
+//            while (rs.next()) {
+//
+//                Event e = new Event(
+//                        rs.getInt("event_id"), // Lấy đúng id của event
+//                        rs.getString("event_name"), // Lấy đúng tên event
+//                        rs.getTimestamp("start_date"),
+//                        rs.getTimestamp("end_date"),
+//                        rs.getInt("max_attendees")
+//                );
+//                e.setRegisterUser(rs.getInt("registerUser"));
+//                e.setVenue(new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), 0));
+//                events.add(e);
+//            }
+//        }
+//        return events;
+//    }
+    
+    public List<Event> getEvent(String kw) throws SQLException {
+    List<Event> events = new ArrayList<>();
+    String sql = "SELECT e.id AS event_id, e.name AS event_name, e.start_date, e.end_date, e.max_attendees, "
+               + "v.id AS venue_id, v.name AS venue_name, "
+               + "(e.max_attendees - COALESCE(SUM(t.quantity), 0)) AS registerUser "
+               + "FROM event e "
+               + "JOIN venue v ON e.venue_id = v.id "
+               + "LEFT JOIN ticket t ON t.event_id = e.id "
+               + "WHERE e.is_active = 1 ";
 
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-
-                Event e = new Event(
-                        rs.getInt("event_id"), // Lấy đúng id của event
-                        rs.getString("event_name"), // Lấy đúng tên event
-                        rs.getTimestamp("start_date"),
-                        rs.getTimestamp("end_date"),
-                        rs.getInt("max_attendees")
-                );
-                e.setRegisterUser(rs.getInt("registerUser"));
-                e.setVenue(new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), 0));
-                events.add(e);
-            }
-        }
-        return events;
+    // Nếu có từ khóa tìm kiếm
+    if (kw != null && !kw.trim().isEmpty()) {
+        sql += " AND (e.name LIKE ?) ";
     }
+    
+    sql += " GROUP BY e.id, e.name, e.start_date, e.end_date, e.max_attendees, v.id, v.name";
+
+    try (Connection conn = JdbcUtils.getConnection();
+         PreparedStatement stm = conn.prepareStatement(sql)) {
+        
+        if (kw != null && !kw.trim().isEmpty()) {
+            String searchKey = "%" + kw + "%";
+            stm.setString(1, searchKey);
+        }
+
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            Event e = new Event(
+                rs.getInt("event_id"),
+                rs.getString("event_name"),
+                rs.getTimestamp("start_date"),
+                rs.getTimestamp("end_date"),
+                rs.getInt("max_attendees")
+            );
+            e.setRegisterUser(rs.getInt("registerUser"));
+            e.setVenue(new Venue(rs.getInt("venue_id"), rs.getString("venue_name"), 0));
+            events.add(e);
+        }
+    }
+    return events;
+}
+
 
     //lay thong tin ve
     public Map<String, Object[]> getTicketInfo(int eventId) {
@@ -83,25 +126,6 @@ public class ListEventService {
 
         return ticketInfo;
     }
-//    // cap nhat so luong ve sau khi thanh toan
-//    public boolean updateTicketQuantity(int eventId, String TicketType){
-//        try (Connection conn = JdbcUtils.getConnection()) {
-//            String sql = "UPDATE ticket JOIN tickettype on tickettype.id = ticket.ticket_type_id "
-//                    + "SET quantity = quantity - 1 "
-//                    + "WHERE ticket.event_id = ? "
-//                    + "AND tickettype.name LIKE ? "
-//                    + "And quantity > 0 ";
-//            PreparedStatement stm = conn.prepareStatement(sql);
-//            stm.setInt(1, eventId);
-//            stm.setString(2, TicketType);
-//            int rs = stm.executeUpdate();
-//            return rs > 0;
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     public boolean processPayment(int eventId, String ticketType, int userId) {
         try (Connection conn = JdbcUtils.getConnection()) {
@@ -157,8 +181,8 @@ public class ListEventService {
             }
 
             // Thêm vào bảng payment
-            String insertPaymentSQL = "INSERT INTO payment (registration_id, is_payment, created_date, updated_date) "
-                    + "VALUES (?, 1, NOW(), NOW())";
+            String insertPaymentSQL = "INSERT INTO payment (register_id, is_payment, is_refunded,created_date, updated_date) "
+                    + "VALUES (?, 1, 0, NOW(), NOW())";
             PreparedStatement insertPayStmt = conn.prepareStatement(insertPaymentSQL);
             insertPayStmt.setInt(1, registrationId);
             int payInserted = insertPayStmt.executeUpdate();
@@ -175,5 +199,24 @@ public class ListEventService {
             return false;
         }
     }
-
+    
+    public boolean checkStatusRegis(int eventId, int userId) throws SQLException{
+        try (Connection conn = JdbcUtils.getConnection()){
+            PreparedStatement stm = conn.prepareStatement("SELECT COUNT(*) FROM registration r "
+                    + "JOIN ticket t on t.id = r.ticket_id "
+                    + "JOIN event e1 on t.event_id = e1.id "
+                    + "JOIN event e2 on e2.id = ? "
+                    + "WHERE r.user_id = ? "
+                    + "AND (e1.start_date < e2.end_date and e1.end_date > e2.start_date)");
+            stm.setInt(1,eventId);
+            stm.setInt(2, userId);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1) > 0;
+            }
+            return false; // Không có xung đột
+        }
+    }
+    
+    
 }

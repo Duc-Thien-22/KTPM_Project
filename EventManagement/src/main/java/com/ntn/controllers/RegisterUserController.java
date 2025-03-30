@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -47,7 +48,15 @@ public class RegisterUserController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            getEvent();
+            getEvent(null);
+            
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                try {
+                    getEvent(newValue);
+                } catch (SQLException ex) {
+                    Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         } catch (SQLException ex) {
             Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,73 +64,68 @@ public class RegisterUserController implements Initializable {
     }
 
     @FXML
-    private Label lbNameSubject;
-    @FXML
-    private Label lbStartDate;
-    @FXML
-    private Label lbEndDate;
-    @FXML
-    private Label lbAttendees;
-    @FXML
-    private Label lbVenue;
-    @FXML
     private VBox eventListContainer;
+    @FXML
+    private TextField searchField;
 
-    public void getEvent() throws SQLException {
-        ListEventService s = new ListEventService();
-        List<Event> events = s.getEvent();
+    private final ListEventService s = new ListEventService();
+
+    public void getEvent(String kw) throws SQLException {
+        List<Event> events = s.getEvent(kw);
 
         if (eventListContainer != null) {
-            this.eventListContainer.getChildren().clear(); // Xóa dữ liệu cũ
+            // Giữ lại ô tìm kiếm, chỉ xóa danh sách sự kiện
+            eventListContainer.getChildren().removeIf(node -> !(node instanceof HBox));
         }
         if (events.isEmpty()) {
             Label emptyLabel = new Label("Không có sự kiện nào.");
             this.eventListContainer.getChildren().add(emptyLabel);
             return;
+        } else {
+            for (Event e : events) {
+                eventListContainer.getChildren().add(displayEvent(e));
+            }
         }
+    }
 
-        for (Event e : events) {
-            VBox eventBox = new VBox(10);
-            eventBox.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
-            eventBox.setPadding(new Insets(15));
+    private VBox displayEvent(Event e) {
+        VBox eventBox = new VBox(10);
+        eventBox.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
+        eventBox.setPadding(new Insets(15));
 
-            Label nameLabel = new Label(e.getName());
-            nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label nameLabel = new Label(e.getName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-            HBox infoBox = new HBox(15);
+        HBox infoBox = new HBox(15);
 
-            // Ảnh sự kiện (nếu có URL ảnh)
-            ImageView eventImage = new ImageView();
-            eventImage.setFitWidth(200);
-            eventImage.setPreserveRatio(true);
-            // eventImage.setImage(new Image(e.getImageUrl())); // Nếu có URL ảnh từ DB, dùng dòng này
+        // Ảnh sự kiện (nếu có URL ảnh)
+        ImageView eventImage = new ImageView();
+        eventImage.setFitWidth(200);
+        eventImage.setPreserveRatio(true);
+        // eventImage.setImage(new Image(e.getImageUrl()));
 
-            VBox detailsBox = new VBox(5);
-            detailsBox.getChildren().addAll(
-                    createInfoRow("Mã sự kiện", "#" + String.valueOf(e.getId())),
-                    createInfoRow("Ngày bắt đầu:", Utils.formatedDate(e.getStartDate())),
-                    createInfoRow("Ngày kết thúc:", Utils.formatedDate(e.getEndDate())),
-                    createInfoRow("Địa điểm:", e.getVenue().getName()),
-                    createInfoRow("Số lượng người đăng ký: ",
-                            String.valueOf(e.getRegisterUser()) + "/" + String.valueOf(e.getMaxAttendees()))
-            );
+        VBox detailsBox = new VBox(5);
+        detailsBox.getChildren().addAll(
+                createInfoRow("Mã sự kiện", "#" + String.valueOf(e.getId())),
+                createInfoRow("Ngày bắt đầu:", Utils.formatedDate(e.getStartDate())),
+                createInfoRow("Ngày kết thúc:", Utils.formatedDate(e.getEndDate())),
+                createInfoRow("Địa điểm:", e.getVenue().getName()),
+                createInfoRow("Số lượng người đăng ký: ",
+                        String.valueOf(e.getRegisterUser()) + "/" + String.valueOf(e.getMaxAttendees()))
+        );
 
-            infoBox.getChildren().addAll(eventImage, detailsBox);
+        infoBox.getChildren().addAll(eventImage, detailsBox);
 
 //            Label descriptionLabel = new Label("Mô tả: " + e.getDescription());
 //            descriptionLabel.setWrapText(true);
-            Button registerButton = new Button("Đăng ký tham gia");
-            registerButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-            if (e.getMaxAttendees() - e.getRegisterUser() == 0) {
-                registerButton.setDisable(true);
-            }
-            int e_id = e.getId();
-            registerButton.setOnAction(event -> registerEvent(e_id));
-            int eventId = e.getId();
-            eventBox.getChildren().addAll(nameLabel, infoBox, registerButton);
-            eventListContainer.getChildren().add(eventBox);
-
-        }
+        Button registerButton = new Button("Đăng ký tham gia");
+        registerButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        if (e.getMaxAttendees() - e.getRegisterUser() == 0) 
+            registerButton.setDisable(true);
+        int eventId = e.getId();
+        registerButton.setOnAction(event -> registerEvent(eventId));
+        eventBox.getChildren().addAll(nameLabel, infoBox, registerButton);
+        return eventBox;
     }
 
     private HBox createInfoRow(String title, String value) {
@@ -134,15 +138,28 @@ public class RegisterUserController implements Initializable {
     }
 
     private void registerEvent(int eventId) {
-        //kiem tra nguoi dung da dang ky su kien co cung thoi gian khong
+        int userId = 6; // Giả sử lấy userId từ session hoặc thông tin đăng nhập
+        try {
+            boolean status_regis = s.checkStatusRegis(eventId, userId);
+            if (status_regis) {
+                Utils.getAlert(Alert.AlertType.WARNING, "Bạn đã đăng ký một sự kiện khác trong cùng thời gian!");
+                return; // Ngăn chặn đăng ký
+            }
 
+        } catch (SQLException ex) {
+            Utils.getAlert(Alert.AlertType.WARNING, "Đã xảy ra lỗi khi kiểm tra sự kiện.");
+
+        }
+        displayTicket(eventId, userId);
+    }
+    
+    private void displayTicket(int eventId, int userId){
         // Tạo cửa sổ mới
         Stage popupStage = new Stage();
         popupStage.initModality(Modality.APPLICATION_MODAL); // Chặn tương tác với cửa sổ chính
         popupStage.setTitle("Đăng ký vé");
 
         // Lấy thông tin loại vé từ database
-        ListEventService s = new ListEventService();
         Map<String, Object[]> ticketData = s.getTicketInfo(eventId);
 
         ToggleGroup ticketGroup = new ToggleGroup();
@@ -151,6 +168,7 @@ public class RegisterUserController implements Initializable {
 
         boolean isFirst = true;
         for (Map.Entry<String, Object[]> entry : ticketData.entrySet()) {
+            //THONG TIN VE
             String type = entry.getKey();
             int quantity = (int) entry.getValue()[0];
             BigDecimal price = (BigDecimal) entry.getValue()[1];
@@ -158,10 +176,8 @@ public class RegisterUserController implements Initializable {
             RadioButton ticketRadio = new RadioButton(type + " (" + quantity + " vé còn lại)");
             ticketRadio.setUserData(price.toString());
             ticketRadio.setToggleGroup(ticketGroup);
-
-            if (quantity == 0) {
-                ticketRadio.setDisable(true);
-            } else if (isFirst) {
+            ticketRadio.setDisable(quantity == 0);
+            if (isFirst) {
                 ticketRadio.setSelected(true);
                 priceLabel.setText("Gía tiền: " + price.toPlainString());
                 isFirst = false;
@@ -172,64 +188,30 @@ public class RegisterUserController implements Initializable {
 
         ticketGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                BigDecimal selectedPrice = new BigDecimal(newValue.getUserData().toString());
-                priceLabel.setText("Gía tiền: " + selectedPrice.toPlainString());
+                //BigDecimal selectedPrice = new BigDecimal(newValue.getUserData().toString());
+                priceLabel.setText("Gía tiền: " + newValue.getUserData().toString());
             }
         });
 
         // Nút thanh toán
         Button payButton = new Button("Thanh toán");
         payButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-//        payButton.setOnAction(event -> {
-//            Toggle selectedToggle = ticketGroup.getSelectedToggle();
-//            RadioButton selectedButton = (RadioButton) selectedToggle;
-//            String ticketType = selectedButton.getText().split("\\s*\\(")[0];
-//            String ticketPrice = selectedButton.getUserData().toString();
-//
-//            boolean update = s.updateTicketQuantity(eventId, ticketType);
-//            if (update) {
-//                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-//                successAlert.setTitle("Thanh toán");
-//                successAlert.setHeaderText("Thanh toán thành công"); // Xóa tiêu đề mặc định
-//                successAlert.setContentText("Loại vé: " + ticketType + "\n" + "Giá tiền: " + ticketPrice);
-//                successAlert.showAndWait();
-//                popupStage.close();
-//                try {
-//                    getEvent(); // Cập nhật lại danh sách sự kiện để hiển thị số lượng vé mới
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } else {
-//                Alert failAlert = new Alert(Alert.AlertType.ERROR);
-//                failAlert.setTitle("Thanh toán");
-//                failAlert.setHeaderText("Thanh toán không thành công, có thể đã hết vé!"); // Xóa tiêu đề mặc định
-//                failAlert.showAndWait();
-//                popupStage.close();
-//            }
-//        });
-
         payButton.setOnAction(event -> {
             Toggle selectedToggle = ticketGroup.getSelectedToggle();
-
             RadioButton selectedButton = (RadioButton) selectedToggle;
             String ticketType = selectedButton.getText().split("\\s*\\(")[0];
-
-            int userId = 6; // Giả sử lấy userId từ session hoặc thông tin đăng nhập
-
             boolean paymentSuccess = s.processPayment(eventId, ticketType, userId);
 
             if (paymentSuccess) {
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Thanh toán thành công!", ButtonType.OK);
-                successAlert.showAndWait();
+                Utils.getAlert(Alert.AlertType.INFORMATION, "Thanh toán thành công!");
                 popupStage.close();
                 try {
-                    getEvent(); // Cập nhật lại danh sách sự kiện
+                    getEvent(null); // Cập nhật lại danh sách sự kiện
                 } catch (SQLException ex) {
                     Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                Alert failAlert = new Alert(Alert.AlertType.ERROR, "Thanh toán không thành công. Hết vé hoặc lỗi hệ thống!", ButtonType.OK);
-                failAlert.showAndWait();
+                Utils.getAlert(Alert.AlertType.ERROR, "Thanh toán không thành công. Hết vé hoặc lỗi hệ thống!");
             }
         });
 
