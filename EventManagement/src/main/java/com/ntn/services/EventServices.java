@@ -7,6 +7,7 @@ package com.ntn.services;
 import com.ntn.pojo.DTO.EventDTO;
 import com.ntn.pojo.Event;
 import com.ntn.pojo.JdbcUtils;
+import com.ntn.pojo.Ticket;
 import com.ntn.pojo.Venue;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -174,7 +176,7 @@ public class EventServices {
         }
     }
 
-    public List<EventDTO> getEvent(String kw) throws SQLException {
+    public List<EventDTO> getEvents(String kw) throws SQLException {
         List<EventDTO> events = new ArrayList<>();
         String sql = "SELECT e.id AS event_id, e.name AS event_name, e.start_date, e.end_date, e.max_attendees, "
                 + "v.id AS venue_id, v.name AS venue_name, "
@@ -326,5 +328,34 @@ public class EventServices {
             }
             return false; // Không có xung đột
         }
+    }
+
+    public List<EventDTO> getEvents(int userId) throws SQLException {
+        List<EventDTO> events = new ArrayList<>();
+        try (Connection conn = JdbcUtils.getConnection()) {
+            String sql = "SELECT event.id, event.name,event.start_date, event.end_date,venue.id, venue.name, tickettype.name "
+                    + "from event "
+                    + "join venue on venue.id = event.venue_id "
+                    + "join ticket on ticket.event_id = event.id "
+                    + "join tickettype on ticket.ticket_type_id = tickettype.id "
+                    + "join registration on registration.ticket_id = ticket.id "
+                    + "where registration.user_id = ?";
+            PreparedStatement stm = conn.prepareCall(sql);
+            stm.setInt(1, userId);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {   
+                EventDTO e = new EventDTO(rs.getInt("event.id"), 
+                        rs.getString("event.name"), 
+                        rs.getTimestamp("event.start_date"),
+                        rs.getTimestamp("event.end_date"),
+                        new Venue(rs.getInt("venue.id"), rs.getString("venue.name"), 0),
+                        rs.getString("tickettype.name")
+                );
+
+                events.add(e);
+            }
+        }
+
+        return events;
     }
 }

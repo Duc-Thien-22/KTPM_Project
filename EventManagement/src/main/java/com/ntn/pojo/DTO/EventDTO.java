@@ -12,6 +12,7 @@ import java.sql.Timestamp;
  * @author admin
  */
 public class EventDTO {
+
     private int id;
     private String name;
     private Timestamp startDate;
@@ -19,6 +20,7 @@ public class EventDTO {
     private int maxAttendees;
     private int registeredUser;
     private Venue venue;
+    private String ticketName;
 
     public EventDTO(int id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees, int registeredUser, Venue venue) {
         this.id = id;
@@ -30,7 +32,15 @@ public class EventDTO {
         this.venue = venue;
     }
     
-    
+    public EventDTO(int id, String name, Timestamp startDate, Timestamp endDate, Venue venue, String ticketName) {
+        this.id = id;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.venue = venue;
+        this.ticketName = ticketName;
+    }
+
     /**
      * @return the id
      */
@@ -128,5 +138,19 @@ public class EventDTO {
     public void setVenue(Venue venue) {
         this.venue = venue;
     }
-    
+
+    /**
+     * @return the ticketName
+     */
+    public String getTicketName() {
+        return ticketName;
+    }
+
+    /**
+     * @param ticketName the ticketName to set
+     */
+    public void setTicketName(String ticketName) {
+        this.ticketName = ticketName;
+    }
+
 }

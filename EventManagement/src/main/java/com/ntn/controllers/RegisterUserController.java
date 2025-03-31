@@ -7,8 +7,11 @@ package com.ntn.controllers;
 import com.ntn.eventmanagement.SessionManager;
 import com.ntn.eventmanagement.ViewManager;
 import com.ntn.pojo.DTO.EventDTO;
+import com.ntn.pojo.DTO.NotificationDTO;
+import com.ntn.pojo.Event;
 import com.ntn.pojo.User;
 import com.ntn.services.EventServices;
+import com.ntn.services.NotificationServices;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -18,6 +21,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,11 +34,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,11 +56,43 @@ public class RegisterUserController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    @FXML
+    private VBox eventListContainer;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Label lbUsername;
+    @FXML
+    private Label lbEmail;
+    @FXML
+    private Label lbPhone;
+    @FXML
+    private TableView<EventDTO> registeredEventTable; // Thêm TableView
+    @FXML
+    private TableColumn<EventDTO, String> nameColumn;
+    @FXML
+    private TableColumn<EventDTO, String> ticketTypeColumn;
+    @FXML
+    private TableColumn<EventDTO, String> startDateColumn;
+    @FXML
+    private TableColumn<EventDTO, String> endDateColumn;
+    @FXML
+    private TableColumn<EventDTO, String> venueColumn;
+    @FXML
+    private ObservableList<String> collectNotice = FXCollections.observableArrayList();
+
+    private final EventServices s = new EventServices();
+    private final NotificationServices n = new NotificationServices();
+    private final User currentUser = SessionManager.getCurrentUser();
+    private final int userId = currentUser.getId();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
             getEvent(null);
             loadUserRegister();
+            getNotification(userId);
+            loadRegisteredEvents(userId);
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
                     getEvent(newValue);
@@ -66,21 +107,8 @@ public class RegisterUserController implements Initializable {
 
     }
 
-    @FXML
-    private VBox eventListContainer;
-    @FXML
-    private TextField searchField;
-    @FXML
-    private Label lbUsername;
-    @FXML
-    private Label lbEmail;
-    @FXML
-    private Label lbPhone;
-
-    private final EventServices s = new EventServices();
-
     public void getEvent(String kw) throws SQLException {
-        List<EventDTO> events = s.getEvent(kw);
+        List<EventDTO> events = s.getEvents(kw);
 
         if (eventListContainer != null) {
             // Giữ lại ô tìm kiếm, chỉ xóa danh sách sự kiện
@@ -101,12 +129,14 @@ public class RegisterUserController implements Initializable {
         VBox eventBox = new VBox(10);
         eventBox.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
         eventBox.setPadding(new Insets(15));
-
+        HBox.setHgrow(eventBox, Priority.ALWAYS);
         Label nameLabel = new Label(e.getName());
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
+        nameLabel.setWrapText(true); // Cho phép xuống dòng nếu tên quá dài
+        HBox.setHgrow(nameLabel, Priority.ALWAYS); // Co giãn theo chiều ngang
         HBox infoBox = new HBox(15);
-
+        HBox.setHgrow(infoBox, Priority.ALWAYS); // Co giãn theo chiều ngang
+        infoBox.setAlignment(Pos.CENTER_LEFT); // Căn trái nội dung
         // Ảnh sự kiện (nếu có URL ảnh)
         ImageView eventImage = new ImageView();
         eventImage.setFitWidth(200);
@@ -114,6 +144,7 @@ public class RegisterUserController implements Initializable {
         // eventImage.setImage(new Image(e.getImageUrl()));
 
         VBox detailsBox = new VBox(5);
+        HBox.setHgrow(detailsBox, Priority.ALWAYS); // Co giãn để lấp đầy không gian ngang còn lại
         detailsBox.getChildren().addAll(
                 createInfoRow("Mã sự kiện", "#" + String.valueOf(e.getId())),
                 createInfoRow("Ngày bắt đầu:", Utils.formatedDate(e.getStartDate())),
@@ -143,12 +174,13 @@ public class RegisterUserController implements Initializable {
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-weight: bold;");
         Label valueLabel = new Label(value);
+        HBox.setHgrow(valueLabel, Priority.ALWAYS); // Co giãn để lấp đầy không gian ngang
+        valueLabel.setWrapText(true); // Tự động xuống dòng nếu nội dung quá dài
         row.getChildren().addAll(titleLabel, valueLabel);
         return row;
     }
 
     private void registerEvent(int eventId) {
-        int userId = SessionManager.getCurrentUser().getId();
         try {
             boolean status_regis = s.checkStatusRegis(eventId, userId);
             if (status_regis) {
@@ -244,7 +276,6 @@ public class RegisterUserController implements Initializable {
     }
 
     public void loadUserRegister() {
-        User currentUser = SessionManager.getCurrentUser();
         this.lbUsername.setText(currentUser.getUsername());
         this.lbEmail.setText(currentUser.getEmail());
         this.lbPhone.setText(currentUser.getPhone());
@@ -253,5 +284,35 @@ public class RegisterUserController implements Initializable {
     public void logoutHandler(ActionEvent e) throws IOException {
         SessionManager.logout();
         ViewManager.routeView("login");
+    }
+
+    public void getNotification(int userId) throws SQLException {
+        List<NotificationDTO> notices = n.getNotifications(userId);
+        notices.sort((n1, n2) -> n2.getCreatedDate().compareTo(n1.getCreatedDate()));
+        collectNotice.clear();
+        if (notices.isEmpty()) {
+            collectNotice.add("Không có thông báo!");
+        } else {
+            for (NotificationDTO notice : notices) {
+                collectNotice.add(notice.getContent());
+            }
+        }
+    }
+
+    private void loadRegisteredEvents(int userId) throws SQLException {
+        List<EventDTO> events = s.getEvents(userId);
+        registeredEventTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        ticketTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTicketName()));
+        startDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartDate().toString()));
+        endDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEndDate().toString()));
+        venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getVenue().getName()));
+
+        ObservableList<EventDTO> eventList = FXCollections.observableArrayList(events);
+        registeredEventTable.setItems(eventList);
+
+        if (events.isEmpty()) {
+            registeredEventTable.setPlaceholder(new Label("Không có sự kiện nào đã đăng ký."));
+        }
     }
 }

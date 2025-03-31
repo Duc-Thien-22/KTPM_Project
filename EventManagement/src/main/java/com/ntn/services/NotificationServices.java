@@ -69,7 +69,7 @@ public class NotificationServices {
         return false;
     }
 
-    public List<NotificationDTO> getNotifications() throws SQLException {
+    public List<NotificationDTO> getNotifications(Integer userId) throws SQLException {
         List<NotificationDTO> notifications = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConnection()) {
             String sql = "SELECT notification.id, notification.content, notification.created_date, user.username,event.name "
@@ -77,11 +77,18 @@ public class NotificationServices {
                     + "JOIN registration ON registration.id = notification.register_id "
                     + "JOIN ticket ON ticket.id = registration.ticket_id "
                     + "JOIN event ON event.id = ticket.event_id "
-                    + "JOIN user ON user.id = registration.user_id "
-                    + "ORDER BY event.name";
-
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery(sql);
+                    + "JOIN user ON user.id = registration.user_id";
+            
+            if(userId != null)
+                sql += " WHERE user.id = ?";
+            
+            sql+=" ORDER BY event.name";
+            
+            PreparedStatement stm = conn.prepareStatement(sql);
+            if(userId != null)
+                stm.setInt(1, userId);
+            
+            ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 NotificationDTO n = new NotificationDTO(rs.getInt("id"),
                         rs.getString("content"), rs.getTimestamp("created_date"),
