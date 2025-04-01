@@ -38,15 +38,15 @@
             <Tab text="Danh sách sự kiện">
                 <ScrollPane fitToWidth="true">
                     
-                                    <VBox fx:id="eventListContainer" spacing="20" VBox.vgrow="ALWAYS">
-                                        <padding>
-                                            <Insets bottom="20" left="20" right="20" top="20" />
-                                        </padding>
-                                        <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Tìm kiếm" />
-                                            <TextField fx:id="searchField" promptText="Nhập từ khóa..." HBox.hgrow="ALWAYS" />
-                                        </HBox>
-                                    </VBox>
+                    <VBox fx:id="eventListContainer" spacing="20" VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Tìm kiếm" />
+                            <TextField fx:id="searchField" promptText="Nhập từ khóa..." HBox.hgrow="ALWAYS" />
+                        </HBox>
+                    </VBox>
                                 
                 </ScrollPane>
             </Tab>

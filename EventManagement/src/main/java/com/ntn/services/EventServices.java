@@ -7,7 +7,6 @@ package com.ntn.services;
 import com.ntn.pojo.DTO.EventDTO;
 import com.ntn.pojo.Event;
 import com.ntn.pojo.JdbcUtils;
-import com.ntn.pojo.Ticket;
 import com.ntn.pojo.Venue;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -71,21 +69,6 @@ public class EventServices {
         }
 
         return events;
-    }
-
-    public int addEvent(Event e) throws SQLException {
-        try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "INSERT INTO event (name, start_date, end_date, max_attendees, venue_id) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement stm = conn.prepareCall(sql);
-
-            stm.setString(1, e.getName());
-            stm.setTimestamp(2, e.getStartDate());
-            stm.setTimestamp(3, e.getEndDate());
-            stm.setInt(4, e.getMaxAttendees());
-            stm.setInt(5, e.getVenue().getId());
-
-            return stm.executeUpdate();
-        }
     }
 
     public Event checkVenueAndDateTime(int venueId, Timestamp startDate, int eventId) throws SQLException {
@@ -343,9 +326,9 @@ public class EventServices {
             PreparedStatement stm = conn.prepareCall(sql);
             stm.setInt(1, userId);
             ResultSet rs = stm.executeQuery();
-            while (rs.next()) {   
-                EventDTO e = new EventDTO(rs.getInt("event.id"), 
-                        rs.getString("event.name"), 
+            while (rs.next()) {
+                EventDTO e = new EventDTO(rs.getInt("event.id"),
+                        rs.getString("event.name"),
                         rs.getTimestamp("event.start_date"),
                         rs.getTimestamp("event.end_date"),
                         new Venue(rs.getInt("venue.id"), rs.getString("venue.name"), 0),
@@ -357,5 +340,20 @@ public class EventServices {
         }
 
         return events;
+    }
+
+    public int addEvent(Event e) throws SQLException {
+        try (Connection conn = JdbcUtils.getConnection()) {
+            String sql = "INSERT INTO event (name, start_date, end_date, max_attendees, venue_id) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stm = conn.prepareCall(sql);
+
+            stm.setString(1, e.getName());
+            stm.setTimestamp(2, e.getStartDate());
+            stm.setTimestamp(3, e.getEndDate());
+            stm.setInt(4, e.getMaxAttendees());
+            stm.setInt(5, e.getVenue().getId());
+
+            return stm.executeUpdate();
+        }
     }
 }

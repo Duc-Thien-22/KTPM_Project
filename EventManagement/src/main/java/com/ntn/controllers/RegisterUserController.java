@@ -8,7 +8,6 @@ import com.ntn.eventmanagement.SessionManager;
 import com.ntn.eventmanagement.ViewManager;
 import com.ntn.pojo.DTO.EventDTO;
 import com.ntn.pojo.DTO.NotificationDTO;
-import com.ntn.pojo.Event;
 import com.ntn.pojo.User;
 import com.ntn.services.EventServices;
 import com.ntn.services.NotificationServices;
@@ -156,8 +155,6 @@ public class RegisterUserController implements Initializable {
 
         infoBox.getChildren().addAll(eventImage, detailsBox);
 
-//            Label descriptionLabel = new Label("Mô tả: " + e.getDescription());
-//            descriptionLabel.setWrapText(true);
         Button registerButton = new Button("Đăng ký tham gia");
         registerButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         if (e.getMaxAttendees() - e.getRegisteredUser() == 0) {
@@ -249,6 +246,7 @@ public class RegisterUserController implements Initializable {
                 popupStage.close();
                 try {
                     getEvent(null); // Cập nhật lại danh sách sự kiện
+                    loadRegisteredEvents(userId);
                 } catch (SQLException ex) {
                     Logger.getLogger(RegisterUserController.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -79,6 +79,11 @@ public class Ticket implements Serializable {
         this.quantity = quantity;
         this.price = price;
     }
+    
+    public Ticket(int quantity, BigDecimal price) {
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;

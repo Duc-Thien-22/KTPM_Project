@@ -18,6 +18,7 @@ com\ntn\eventmanagement\App.class
 com\ntn\services\NotificationServices.class
 com\ntn\pojo\JdbcUtils.class
 com\ntn\pojo\DTO\EventDTO.class
+com\ntn\services\TicketServices.class
 com\ntn\controllers\EventTabController$1.class
 com\ntn\pojo\Ticket.class
 com\ntn\pojo\DTO\NotificationDTO.class

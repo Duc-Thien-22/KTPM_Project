@@ -127,7 +127,7 @@ public class Tickettype implements Serializable {
 
     @Override
     public String toString() {
-        return "com.ntn.pojo.Tickettype[ id=" + id + " ]";
+        return this.name;
     }
     
 }
