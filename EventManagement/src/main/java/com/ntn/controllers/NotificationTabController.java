@@ -97,7 +97,7 @@ public class NotificationTabController implements Initializable {
 
     public void loadDataHistoryNotification() throws SQLException {
         this.tbHistoryNotifications.getItems().clear();
-        this.tbHistoryNotifications.setItems(FXCollections.observableList(this.notificationServices.getNotifications()));
+        this.tbHistoryNotifications.setItems(FXCollections.observableList(this.notificationServices.getNotifications(null)));
         this.tbHistoryNotifications.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 

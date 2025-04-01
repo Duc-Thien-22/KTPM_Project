@@ -29,7 +29,7 @@ public class UserServices {
             if (rs.next()) {
                 User u = new User(rs.getInt("id"), rs.getString("username"),
                         rs.getString("password"), rs.getString("first_name"),
-                        rs.getString("last_name"), rs.getString("email"), rs.getString("role"));
+                        rs.getString("last_name"), rs.getString("email"),rs.getString("phone"), rs.getString("role"));
                 return u;
             }
         }
@@ -49,7 +49,7 @@ public class UserServices {
             if (rs.next()) {
                 User u = new User(rs.getInt("id"), rs.getString("username"),
                         rs.getString("password"), rs.getString("first_name"),
-                        rs.getString("last_name"), rs.getString("email"), rs.getString("role"));
+                        rs.getString("last_name"), rs.getString("email"),rs.getString("phone"), rs.getString("role"));
                 return u;
             }
         }

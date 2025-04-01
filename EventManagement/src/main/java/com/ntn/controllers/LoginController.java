@@ -69,7 +69,7 @@ public class LoginController implements Initializable {
             if ("ROLE_ADMIN".equals(currentUser.getRole())) {
                 ViewManager.routeView("manageEvent");
             } else {
-                Utils.getAlert(Alert.AlertType.INFORMATION, "Trang user");
+                ViewManager.routeView("registerUser");
             }
         }else
             Utils.getAlert(Alert.AlertType.ERROR, "Không được để trống dữ liệu !!");
