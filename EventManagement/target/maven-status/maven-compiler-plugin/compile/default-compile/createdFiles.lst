@@ -13,9 +13,11 @@ module-info.class
 com\ntn\pojo\Notification.class
 com\ntn\pojo\Tickettype.class
 com\ntn\controllers\NotificationTabController.class
+com\ntn\controllers\RegisterUserController.class
 com\ntn\eventmanagement\App.class
 com\ntn\services\NotificationServices.class
 com\ntn\pojo\JdbcUtils.class
+com\ntn\pojo\DTO\EventDTO.class
 com\ntn\controllers\EventTabController$1.class
 com\ntn\pojo\Ticket.class
 com\ntn\pojo\DTO\NotificationDTO.class

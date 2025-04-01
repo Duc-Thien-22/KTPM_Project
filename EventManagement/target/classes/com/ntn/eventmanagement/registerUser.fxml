@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ntn.controllers.RegisterUserController">
+    
+
+    <top>
+        <VBox alignment="CENTER" style="-fx-background-color: #f0f0f0;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: darkblue;" text="HỆ THỐNG QUẢN LÝ SỰ KIỆN" />
+        </VBox>
+    </top>
+    
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            
+            <Tab text="Danh sách sự kiện">
+                <ScrollPane fitToWidth="true">
+                    
+                                    <VBox fx:id="eventListContainer" spacing="20" VBox.vgrow="ALWAYS">
+                                        <padding>
+                                            <Insets bottom="20" left="20" right="20" top="20" />
+                                        </padding>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Tìm kiếm" />
+                                            <TextField fx:id="searchField" promptText="Nhập từ khóa..." HBox.hgrow="ALWAYS" />
+                                        </HBox>
+                                    </VBox>
+                                
+                </ScrollPane>
+            </Tab>
+            
+             
+            <Tab text="Thông báo">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Thông báo và nhắc nhở" />
+                        
+                        <ListView prefHeight="200">
+                            <items>
+                                <FXCollections fx:id="collectNotice" fx:factory="observableArrayList">
+                                </FXCollections>
+                            </items>
+                        </ListView>
+                        
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Các lưu ý:" />
+                        
+                        <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                            <Label text="- Thông báo thay đổi thời gian sẽ gửi trước 24h." />
+                            <Label text="- Nếu sự kiện hủy, sẽ hoàn tiền cho người tham gia." />
+                            <Label text="- Thông báo nhắc nhở trước 1 ngày sự kiện diễn ra." />
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+              
+            <Tab text="Thông tin cá nhân">
+                <ScrollPane fitToWidth="true">
+                    <VBox alignment="TOP_CENTER" spacing="15">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Thông tin người dùng" />
+                        
+                        
+                        <GridPane alignment="CENTER" hgap="10" vgap="10">
+                            <padding>
+                                <Insets bottom="20" left="20" right="20" top="20" />
+                            </padding>
+                            
+                            <Label text="Họ tên:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label fx:id="lbUsername" GridPane.columnIndex="1" />
+                            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label fx:id="lbEmail" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" /> 
+                            <Label fx:id="lbPhone" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Button onAction="#logoutHandler" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Đăng xuất" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            
+                        </GridPane>
+                        
+                       
+                        <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-radius: 5px;">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Danh sách sự kiện đã đăng ký" />
+                            <TableView fx:id="registeredEventTable" prefHeight="200.0" prefWidth="200.0">
+                                <columns>
+                                    <TableColumn prefWidth="75.0" text="Tên sự kiện" fx:id="nameColumn" />
+                                    <TableColumn prefWidth="75.0" text="Loại vé" fx:id="ticketTypeColumn" />
+                                    <TableColumn prefWidth="116.66659545898438" text="Thời gian bắt đầu" fx:id="startDateColumn" />
+                                    <TableColumn prefWidth="118.0" text="Thời gian kết thúc" fx:id="endDateColumn" />
+                                    <TableColumn prefWidth="62.0" text="Địa điểm" fx:id="venueColumn" />
+                                </columns>
+                            </TableView>
+                        </VBox>
+                        
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
