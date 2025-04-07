@@ -38,6 +38,23 @@ public class TicketServices {
         return ticketTypes;
     }
 
+    public List<Integer> getTicketById(int eventId) throws SQLException {
+        List<Integer> tickets = new ArrayList<>();
+
+        try (Connection conn = JdbcUtils.getConnection()) {
+            String sql = "SELECT* FROM ticket WHERE event_id = ?";
+            PreparedStatement stm = conn.prepareCall(sql);
+
+            stm.setInt(1, eventId);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                tickets.add(rs.getInt("id"));
+            }
+        }
+        return tickets;
+    }
+
     public boolean addTickets(List<Ticket> tickets) throws SQLException {
         boolean success = false;
         try (Connection conn = JdbcUtils.getConnection()) {
@@ -98,13 +115,13 @@ public class TicketServices {
 
             if (rowsInserted > 0) {
 
-                String sql_ = "UPDATE ticket SET quantity = ?, price = ? WHERE event_id = ?";
+                String sql_ = "UPDATE ticket SET quantity = ?, price = ? WHERE id = ?";
                 PreparedStatement stm_ = conn.prepareCall(sql_);
                 for (Ticket ticket : tickets) {
 
                     stm_.setInt(1, ticket.getQuantity());
                     stm_.setBigDecimal(2, ticket.getPrice());
-                    stm_.setInt(3, ticket.getEventId().getId());
+                    stm_.setInt(3, ticket.getId());
                     stm_.executeUpdate();
                 }
             }
