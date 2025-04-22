@@ -292,7 +292,7 @@ public class RegisterUserController implements Initializable {
             collectNotice.add("Không có thông báo!");
         } else {
             for (NotificationDTO notice : notices) {
-                collectNotice.add(notice.getContent());
+                collectNotice.add("Sự kiện " + notice.getEventName() + ": " + notice.getContent());
             }
         }
     }

@@ -270,7 +270,7 @@ public class EventTabController implements Initializable {
 
             int venueId = this.venuesId.get(this.cbVenues.getValue().split(" - ")[0].trim());
 
-            Event eventExist = this.eventServices.checkVenueAndDateTime(venueId, startDate, this.eventIdSelected);
+            Event eventExist = this.eventServices.checkVenueAndDateTime(venueId, startDate,endDate, this.eventIdSelected);
             if (eventExist != null) {
                 Utils.getAlert(AlertType.ERROR, String.format("Từ %s đến %s đang diễn ra sự kiên tại %s",
                         Utils.formatedDate(eventExist.getStartDate()),
@@ -433,6 +433,11 @@ public class EventTabController implements Initializable {
         if (tickets != null) {
             tickets.get(0).getEventId().setId(this.eventIdSelected);
             tickets.get(0).getEventId().setIsActive(Boolean.TRUE);
+            List<Integer> ticketIds = this.ticketServices.getTicketById(tickets.get(0).getEventId().getId());
+            
+            for(int i = 0; i < tickets.size() ; i++)
+                tickets.get(i).setId(ticketIds.get(i));
+            
             boolean rs = this.ticketServices.updateTickets(tickets);
 
             Utils.getAlert(

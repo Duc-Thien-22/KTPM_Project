@@ -46,7 +46,7 @@ public class LoginController implements Initializable {
 
         if (!this.txtUsername.getText().isEmpty() && !this.txtPassword.getText().isEmpty()) {
             if (!ValidationUtils.isValidationPassword(this.txtPassword.getText())) {
-                Utils.getAlert(Alert.AlertType.ERROR, "Password ít nhất là 8 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt");
+                Utils.getAlert(Alert.AlertType.ERROR, "Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt");
                 this.txtPassword.clear();
                 return;
             }

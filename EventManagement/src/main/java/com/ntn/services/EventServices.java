@@ -71,13 +71,23 @@ public class EventServices {
         return events;
     }
 
-    public Event checkVenueAndDateTime(int venueId, Timestamp startDate, int eventId) throws SQLException {
+    public Event checkVenueAndDateTime(int venueId, Timestamp startDate, Timestamp endDate, int eventId) throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "SELECT * FROM event WHERE venue_id = ? AND DATE_FORMAT(?, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(start_date, '%Y-%m-%d %H:%i')AND DATE_FORMAT(end_date, '%Y-%m-%d %H:%i') AND id != ?";
+            String sql = "SELECT * FROM event WHERE venue_id = ? "
+                    + "AND ( DATE_FORMAT(?, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(start_date, '%Y-%m-%d %H:%i') AND DATE_FORMAT(end_date, '%Y-%m-%d %H:%i') "
+                    + "OR DATE_FORMAT(?, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(start_date, '%Y-%m-%d %H:%i') AND DATE_FORMAT(end_date, '%Y-%m-%d %H:%i') "
+                    + "OR DATE_FORMAT(start_date, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(?, '%Y-%m-%d %H:%i') AND DATE_FORMAT(?, '%Y-%m-%d %H:%i') "
+                    + "OR DATE_FORMAT(end_date, '%Y-%m-%d %H:%i') BETWEEN DATE_FORMAT(?, '%Y-%m-%d %H:%i') AND DATE_FORMAT(?, '%Y-%m-%d %H:%i') "
+                    + " ) AND id != ?";
             PreparedStatement stm = conn.prepareCall(sql);
             stm.setInt(1, venueId);
             stm.setTimestamp(2, startDate);
-            stm.setInt(3, eventId);
+            stm.setTimestamp(3, endDate);
+            stm.setTimestamp(4, startDate);
+            stm.setTimestamp(5, endDate);
+            stm.setTimestamp(6, startDate);
+            stm.setTimestamp(7, endDate);
+            stm.setInt(8, eventId);
 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -167,7 +177,7 @@ public class EventServices {
                 + "FROM event e "
                 + "JOIN venue v ON e.venue_id = v.id "
                 + "LEFT JOIN ticket t ON t.event_id = e.id "
-                + "WHERE e.is_active = 1 ";
+                + "WHERE e.end_date > Now() ";
 
         // Nếu có từ khóa tìm kiếm
         if (kw != null && !kw.trim().isEmpty()) {
