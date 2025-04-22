@@ -150,7 +150,8 @@ public class EventServices {
         return registerIds;
     }
 
-    public void refundeMoneyToUsers(List<Integer> registerIds) throws SQLException {
+    public int refundeMoneyToUsers(List<Integer> registerIds) throws SQLException {
+        int updatedCount = 0;
         try (Connection conn = JdbcUtils.getConnection()) {
             if (!registerIds.isEmpty()) {
                 String placeholders = registerIds.stream()
@@ -164,9 +165,10 @@ public class EventServices {
                 for (int i = 0; i < registerIds.size(); i++) {
                     stm.setInt(i + 1, registerIds.get(i));
                 }
-                stm.executeUpdate();
+                updatedCount = stm.executeUpdate();
             }
         }
+        return updatedCount;
     }
 
     public List<EventDTO> getEvents(String kw) throws SQLException {

@@ -48,9 +48,9 @@
         </HBox>
             
         <Label text="Địa điểm:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <ComboBox fx:id="cbVenues" promptText="Chọn địa điểm" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <ComboBox fx:id="cbVenues" GridPane.columnIndex="1" GridPane.rowIndex="3" />
           
-        <Label text="Sức chứa:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label text="Số người tham gia:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
         <TextField fx:id="eventCapacityField" promptText="Nhập số lượng khách tối đa" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         
         <HBox fx:id="hTicketType" spacing="5" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">

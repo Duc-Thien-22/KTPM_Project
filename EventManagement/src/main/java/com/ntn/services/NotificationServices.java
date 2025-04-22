@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
  */
 public class NotificationServices {
 
-    public void sendNotificationForUser(String content, String type, int eventId) throws SQLException {
+    public int sendNotificationForUser(String content, String type, int eventId) throws SQLException {
+        int insertedCount = 0;
         try (Connection conn = JdbcUtils.getConnection()) {
             EventServices eventServices = new EventServices();
             List<Integer> registerIds = eventServices.getRegisterByEventId(eventId);
@@ -33,11 +34,12 @@ public class NotificationServices {
                     stm.setString(1, content);
                     stm.setString(2, type);
                     stm.setInt(3, registerId);
-                    stm.executeUpdate();
+                    insertedCount += stm.executeUpdate();
                 }
                 conn.commit();
             }
         }
+        return insertedCount;
     }
 
     public boolean isUsersRemider(List<Integer> registerIds) throws SQLException {
@@ -47,11 +49,11 @@ public class NotificationServices {
                 String placeholders = registerIds.stream()
                         .map(id -> "?") // Tạo ?,?,?
                         .collect(Collectors.joining(", "));
-                
+
                 String sql = "SELECT COUNT(*) FROM eventmanagement.notification\n"
                         + "JOIN registration ON registration.id = notification.register_id\n"
                         + "WHERE notification.notification_type = 'REMINDER' AND registration.id IN (" + placeholders + ")";
-                
+
                 PreparedStatement stm = conn.prepareCall(sql);
 
                 for (int i = 0; i < registerIds.size(); i++) {
@@ -77,16 +79,18 @@ public class NotificationServices {
                     + "JOIN ticket ON ticket.id = registration.ticket_id "
                     + "JOIN event ON event.id = ticket.event_id "
                     + "JOIN user ON user.id = registration.user_id";
-            
-            if(userId != null)
+
+            if (userId != null) {
                 sql += " WHERE user.id = ?";
-            
-            sql+=" ORDER BY event.name";
-            
+            }
+
+            sql += " ORDER BY event.name";
+
             PreparedStatement stm = conn.prepareStatement(sql);
-            if(userId != null)
+            if (userId != null) {
                 stm.setInt(1, userId);
-            
+            }
+
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 NotificationDTO n = new NotificationDTO(rs.getInt("id"),

@@ -7,7 +7,6 @@ package com.ntn.services;
 import com.ntn.pojo.JdbcUtils;
 import com.ntn.pojo.Ticket;
 import com.ntn.pojo.Tickettype;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -5,13 +5,16 @@ C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\p
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\UserServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\Utils.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\RegisterUserController.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\EventTabServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\EventTabController.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\TicketServices.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\AddUserServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\ViewManager.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\DTO\EventDTO.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\NotificationTabController.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\App.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\module-info.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\NotificationTabServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Registration.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\EventServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Event.java
@@ -20,6 +23,7 @@ C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\c
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Payment.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Ticket.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Notification.java
+C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\LoginServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\SessionManager.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\services\VenueServices.java
 C:\Users\NHAT\Code\JavaKTPM\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\AddUserController.java

@@ -6,13 +6,9 @@ package com.ntn.controllers;
 
 import com.ntn.pojo.DTO.NotificationDTO;
 import com.ntn.pojo.Event;
-import com.ntn.services.EventServices;
-import com.ntn.services.NotificationServices;
+import com.ntn.services.NotificationTabServices;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,9 +33,7 @@ public class NotificationTabController implements Initializable {
     @FXML
     private TextArea txtContentNotification;
 
-    private final EventServices eventServices = new EventServices();
-    private final NotificationServices notificationServices = new NotificationServices();
-    private final int ONE_HOUR = 24 * 60 * 60 * 1000;
+    private final NotificationTabServices notificationTabServices = new NotificationTabServices();
 
     /**
      * Initializes the controller class.
@@ -58,16 +52,7 @@ public class NotificationTabController implements Initializable {
     }
 
     public void autoRemiderNotification() throws SQLException {
-        List<Event> events = this.eventServices.getEvents();
-        Timestamp timestamp = new Timestamp(new Date().getTime());
-        for (Event event : events) {
-             List<Integer> registerIds = this.eventServices.getRegisterByEventId(event.getId());
-            if (event.getIsActive() 
-                    && event.getStartDate().getTime() - timestamp.getTime() <= ONE_HOUR 
-                    && !this.notificationServices.isUsersRemider(registerIds)) {
-                this.notificationServices.sendNotificationForUser(Utils.getContentNotification("Sắp diễn ra", event), "REMINDER", event.getId());
-            }
-        }
+        this.notificationTabServices.autoRemiderNotification();
     }
 
     public void loadColumnHistoryNotification() {
@@ -97,13 +82,14 @@ public class NotificationTabController implements Initializable {
 
     public void loadDataHistoryNotification() throws SQLException {
         this.tbHistoryNotifications.getItems().clear();
-        this.tbHistoryNotifications.setItems(FXCollections.observableList(this.notificationServices.getNotifications(null)));
+        this.tbHistoryNotifications.setItems(FXCollections.observableList(
+                this.notificationTabServices.getNotificationHistory()));
         this.tbHistoryNotifications.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     public void loadEvents() throws SQLException {
         this.cbEvents.getItems().clear();
-        this.cbEvents.setItems(FXCollections.observableList(this.eventServices.getEvents()));
+        this.cbEvents.setItems(FXCollections.observableList(this.notificationTabServices.getEvents()));
     }
 
     public void refeshHandler(ActionEvent e) throws SQLException {
@@ -111,25 +97,33 @@ public class NotificationTabController implements Initializable {
         this.loadColumnHistoryNotification();
         this.loadDataHistoryNotification();
     }
-    
-    public void sendNotificationHandler(ActionEvent e){
-        if(this.cbEvents.getValue() == null || this.txtContentNotification.getText().isEmpty()){
-            Utils.getAlert(Alert.AlertType.WARNING, "Vui lòng nhập dữ liệu !!");
+
+    public void sendNotificationHandler(ActionEvent e) {
+        String error = this.notificationTabServices.checkInputValid(this.cbEvents.getValue(),
+                this.txtContentNotification.getText());
+        if (error != null) {
+            Utils.getAlert(Alert.AlertType.ERROR, error);
             return;
         }
+
         int event_id = this.cbEvents.getValue().getId();
         String content = this.txtContentNotification.getText();
         try {
-            this.notificationServices.sendNotificationForUser(content, "UPDATE", event_id);
-            Utils.getAlert(Alert.AlertType.INFORMATION, "Gửi thông báo thành công");
-            this.loadDataHistoryNotification();
-            this.clearFields();
+            boolean rs = this.notificationTabServices.sendNotification(event_id, content);
+            if (rs) {
+                Utils.getAlert(Alert.AlertType.INFORMATION, "Gửi thông báo thành công");
+                this.loadDataHistoryNotification();
+                this.clearFields();
+            } else {
+                Utils.getAlert(Alert.AlertType.ERROR, "Gửi thông báo thất bại");
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(NotificationTabController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void clearFields(){
+
+    public void clearFields() {
         this.txtContentNotification.clear();
         this.cbEvents.setValue(null);
     }
