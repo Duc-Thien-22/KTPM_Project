@@ -6,6 +6,7 @@ D:\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\ViewManage
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\TicketServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\VenueServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\NotificationTabController.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\RegisterUserServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Ticket.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\App.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\JdbcUtils.java
