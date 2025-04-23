@@ -179,7 +179,7 @@ public class EventServices {
                 + "FROM event e "
                 + "JOIN venue v ON e.venue_id = v.id "
                 + "LEFT JOIN ticket t ON t.event_id = e.id "
-                + "WHERE e.is_active = 1 ";
+                + "WHERE e.end_date > Now() ";
 
         // Nếu có từ khóa tìm kiếm
         if (kw != null && !kw.trim().isEmpty()) {
