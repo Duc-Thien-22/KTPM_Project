@@ -13,7 +13,13 @@ import com.ntn.pojo.User;
  * @author NHAT
  */
 public class LoginServices {
+
     private final UserServices userServices;
+
+    public LoginServices() {
+        this.userServices = new UserServices();
+    }
+
 
     public LoginServices(UserServices userServices) {
         this.userServices = userServices;
@@ -42,4 +48,3 @@ public class LoginServices {
         return "SUCCESS:" + user.getRole();
     }
 }
-

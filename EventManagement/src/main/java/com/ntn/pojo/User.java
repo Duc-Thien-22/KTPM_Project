@@ -70,6 +70,8 @@ public class User implements Serializable {
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
+    @Column(name = "is_active")
+    private Boolean isActive;
     @Basic(optional = false)
     @Column(name = "role")
     private String role;
@@ -83,7 +85,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String username, String password, String firstName, String lastName, String email,String phone, String role) {
+    public User(Integer id, String username, String password, String firstName, String lastName, String email, String phone, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -93,7 +95,7 @@ public class User implements Serializable {
         this.phone = phone;
         this.role = role;
     }
-    
+
     public User(String username, String password, String firstName, String lastName, String email, String numberPhone, String role) {
         this.username = username;
         this.password = password;
@@ -103,7 +105,6 @@ public class User implements Serializable {
         this.phone = numberPhone;
         this.role = role;
     }
-
 
     public Integer getId() {
         return id;
@@ -193,6 +194,14 @@ public class User implements Serializable {
         this.registrationSet = registrationSet;
     }
 
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -217,5 +226,5 @@ public class User implements Serializable {
     public String toString() {
         return "com.ntn.pojo.User[ id=" + id + " ]";
     }
-    
+
 }

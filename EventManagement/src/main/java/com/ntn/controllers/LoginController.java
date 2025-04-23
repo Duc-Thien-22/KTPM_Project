@@ -29,7 +29,7 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField txtPassword;
 
-    private final LoginServices loginService = new LoginServices(new UserServices());
+    private final LoginServices loginService = new LoginServices();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
