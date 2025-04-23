@@ -4,14 +4,11 @@
  */
 package com.ntn.controllers;
 
-import com.ntn.eventmanagement.SessionManager;
-import com.ntn.eventmanagement.ValidationUtils;
 import com.ntn.eventmanagement.ViewManager;
-import com.ntn.pojo.User;
+import com.ntn.services.LoginServices;
 import com.ntn.services.UserServices;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,47 +29,29 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField txtPassword;
 
-    private final UserServices userServices = new UserServices();
+    private final LoginServices loginService = new LoginServices(new UserServices());
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }
 
-    public void loginHandler(ActionEvent e) throws SQLException, IOException {
+    public void loginHandler(ActionEvent e) throws Exception {
+        String username = txtUsername.getText();
+        String password = txtPassword.getText();
 
-        if (!this.txtUsername.getText().isEmpty() && !this.txtPassword.getText().isEmpty()) {
-            if (!ValidationUtils.isValidationPassword(this.txtPassword.getText())) {
-                Utils.getAlert(Alert.AlertType.ERROR, "Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt");
-                this.txtPassword.clear();
-                return;
-            }
+        String result = loginService.login(username, password);
 
-            User currentUser = this.userServices.getUserByUsername(this.txtUsername.getText());
-            if (currentUser == null) {
-                Utils.getAlert(Alert.AlertType.ERROR, "Bạn chưa có tài khoản !!");
-                this.clearField();
-                return;
-            }
-
-            if (!ValidationUtils.isCheckPassword(this.txtPassword.getText(), currentUser.getPassword())) {
-                Utils.getAlert(Alert.AlertType.ERROR, "Nhập sai mật khẩu !!");
-                this.txtPassword.clear();
-                return;
-            }
-
-            SessionManager.login(currentUser);
-
-            if ("ROLE_ADMIN".equals(currentUser.getRole())) {
+        if (result.startsWith("SUCCESS")) {
+            String role = result.split(":")[1];
+            if ("ROLE_ADMIN".equals(role)) {
                 ViewManager.routeView("manageEvent");
             } else {
                 ViewManager.routeView("registerUser");
             }
-        }else
-            Utils.getAlert(Alert.AlertType.ERROR, "Không được để trống dữ liệu !!");
+        } else {
+            Utils.getAlert(Alert.AlertType.ERROR, result);
+            this.clearField();
+        }
     }
 
     public void addUserHandler(ActionEvent e) throws IOException {

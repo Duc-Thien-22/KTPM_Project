@@ -1,5 +1,6 @@
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\EventTabController.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\LoginController.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\NotificationTabServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\Utils.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Venue.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\ViewManager.java
@@ -13,6 +14,8 @@ D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\JdbcUtils.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Notification.java
 D:\KTPM_Project\EventManagement\src\main\java\module-info.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\AddUserController.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\EventTabServices.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\LoginServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\NotificationServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\DTO\NotificationDTO.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Event.java
@@ -21,6 +24,7 @@ D:\KTPM_Project\EventManagement\src\main\java\com\ntn\controllers\ManageEventCon
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Registration.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\UserServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\Tickettype.java
+D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\AddUserServices.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\eventmanagement\SessionManager.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\pojo\DTO\EventDTO.java
 D:\KTPM_Project\EventManagement\src\main\java\com\ntn\services\EventServices.java

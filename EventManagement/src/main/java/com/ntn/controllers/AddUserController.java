@@ -7,6 +7,7 @@ package com.ntn.controllers;
 import com.ntn.eventmanagement.ValidationUtils;
 import com.ntn.eventmanagement.ViewManager;
 import com.ntn.pojo.User;
+import com.ntn.services.AddUserServices;
 import com.ntn.services.UserServices;
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +40,7 @@ public class AddUserController implements Initializable {
     @FXML
     private TextField txtNumberPhone;
 
-    private final UserServices userServices = new UserServices();
+    private final AddUserServices addUserService = new AddUserServices(new UserServices());
 
     /**
      * Initializes the controller class.
@@ -49,59 +50,31 @@ public class AddUserController implements Initializable {
         // TODO
     }
 
-    public void addUserHandler(ActionEvent e) throws SQLException, IOException {
-        // check invalid
-        if (!this.isInputValid()) {
-            Utils.getAlert(Alert.AlertType.ERROR, "Phải nhập đầu đủ dữ liệu");
-            return;
-        }
+    public void addUserHandler(ActionEvent e) throws SQLException, IOException, Exception {
+        User u = new User(
+                this.txtUsername.getText(),
+                this.txtPassword.getText(),
+                this.txtFirstName.getText(),
+                this.txtLastName.getText(),
+                this.txtEmail.getText(),
+                this.txtNumberPhone.getText(),
+                "ROLE_USER"
+        );
 
-        if (!ValidationUtils.isValidationPassword(this.txtPassword.getText())) {
-            Utils.getAlert(Alert.AlertType.ERROR, "Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt");
-            this.txtPassword.clear();
-            return;
-        }
-        
-        if(!ValidationUtils.isValidationEmail(this.txtEmail.getText())){
-            Utils.getAlert(Alert.AlertType.ERROR, "Sai định dạng email.. EX: example@gmail.com");
-            this.txtEmail.clear();
-            return;
-        }
-        
-        if(!ValidationUtils.isValidationPhone(this.txtNumberPhone.getText())){
-            Utils.getAlert(Alert.AlertType.ERROR, "Sai định dạng sdt ... EX: +8401010, 098.... gồm 9-15 kí tự");
-            this.txtNumberPhone.clear();
-            return;
-        }
+        String result = addUserService.addUser(u);
 
-        // handler add user
-        User userExits = this.userServices.getUserByUsername(this.txtUsername.getText(), this.txtEmail.getText());
-
-        if (userExits != null) {
-            Utils.getAlert(Alert.AlertType.ERROR, "Username hoặc email đã tồn tại");
-            ViewManager.routeView("login");
-            return;
-        }
-        User u = new User(this.txtUsername.getText(), ValidationUtils.hashPassword(this.txtPassword.getText()),
-                this.txtFirstName.getText(), this.txtLastName.getText(),
-                this.txtEmail.getText(), this.txtNumberPhone.getText(), "ROLE_USER");
-
-        int rs = this.userServices.addUser(u);
-        if (rs > 0) {
+        if ("SUCCESS".equals(result)) {
             Utils.getAlert(Alert.AlertType.INFORMATION, "Đăng kí thành công");
             ViewManager.routeView("login");
+        } else if ("Username hoặc email đã tồn tại".equals(result)) {
+            Utils.getAlert(Alert.AlertType.ERROR, result);
+            ViewManager.routeView("login");
         } else {
-            Utils.getAlert(Alert.AlertType.WARNING, "Đăng kí thất bại");
+            Utils.getAlert(Alert.AlertType.ERROR, result);
         }
     }
 
     public void loginHandler(ActionEvent e) throws IOException {
         ViewManager.routeView("login");
-    }
-
-    public boolean isInputValid() {
-        return !this.txtUsername.getText().isEmpty() && !this.txtPassword.getText().isEmpty()
-                && !this.txtFirstName.getText().isEmpty() && !this.txtLastName.getText().isEmpty()
-                && !this.txtEmail.getText().isEmpty() && !this.txtNumberPhone.getText().isEmpty();
     }
 }
