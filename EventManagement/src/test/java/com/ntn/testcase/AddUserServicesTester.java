@@ -4,13 +4,10 @@
  */
 package com.ntn.testcase;
 
-import com.ntn.eventmanagement.ValidationUtils;
 import com.ntn.pojo.User;
 import com.ntn.services.AddUserServices;
 import org.junit.jupiter.api.Assertions;
-import com.ntn.services.LoginServices;
 import com.ntn.services.UserServices;
-import java.sql.SQLException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.junit.jupiter.*;

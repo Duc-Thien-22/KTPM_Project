@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------
+Test set: com.ntn.testcase.LoginServicesTester
+-------------------------------------------------------------------------------
+Tests run: 18, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 3.638 s <<< FAILURE! - in com.ntn.testcase.LoginServicesTester
+testUserNameStartEndSpace  Time elapsed: 0.079 s  <<< ERROR!
+org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'getUserByUsername' method:
+    userServices.getUserByUsername("  abc  ");
+    -> at com.ntn.eventmanagement/com.ntn.services.LoginServices.login(LoginServices.java:37)
+ - has following stubbing(s) with different arguments:
+    1. userServices.getUserByUsername("abc");
+      -> at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTester.testUserNameStartEndSpace(LoginServicesTester.java:148)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTester.testUserNameStartEndSpace(LoginServicesTester.java:150)
+
+testBruteForceAttempts  Time elapsed: 1.206 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Tài khoản bị tạm khóa do đăng nhập sai quá số lần cho phép> but was: <SUCCESS:ADMIN>
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTester.testBruteForceAttempts(LoginServicesTester.java:205)
+
+testUserNameValidPasswordInvalid  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt> but was: <Bạn chưa có tài khoản !!>
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTester.testUserNameValidPasswordInvalid(LoginServicesTester.java:102)
+
+testUserDisable  Time elapsed: 0.317 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <tài khoản đã bị khóa> but was: <SUCCESS:null>
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTester.testUserDisable(LoginServicesTester.java:77)
+
