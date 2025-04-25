@@ -20,7 +20,7 @@ import org.mockito.*;
  * @author NHAT
  */
 @ExtendWith(MockitoExtension.class)
-public class LoginServicesTester {
+public class LoginServicesTest {
 
     @Mock
     private UserServices userServices;

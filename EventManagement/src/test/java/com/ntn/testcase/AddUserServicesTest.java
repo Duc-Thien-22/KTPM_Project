@@ -20,7 +20,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  * @author NHAT
  */
 @ExtendWith(MockitoExtension.class)
-public class AddUserServicesTester {
+public class AddUserServicesTest {
 
     @Mock
     private UserServices userServices;

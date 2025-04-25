@@ -1,20 +1,16 @@
 -------------------------------------------------------------------------------
 Test set: com.ntn.testcase.EventTabServicesTester
 -------------------------------------------------------------------------------
-Tests run: 30, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 6.797 s <<< FAILURE! - in com.ntn.testcase.EventTabServicesTester
-testCreateEventEqualEventExist{String, String, String, String}[6]  Time elapsed: 0.104 s  <<< FAILURE!
+Tests run: 37, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 2.763 s <<< FAILURE! - in com.ntn.testcase.EventTabServicesTester
+testCreateEventEqualEventExist{String, String, String, String}[6]  Time elapsed: 0.032 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: not <null>
-	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testCreateEventEqualEventExist(EventTabServicesTester.java:382)
+	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testCreateEventEqualEventExist(EventTabServicesTester.java:448)
 
-testCreateEventEqualEventExist{String, String, String, String}[7]  Time elapsed: 0.069 s  <<< FAILURE!
+testCreateEventEqualEventExist{String, String, String, String}[7]  Time elapsed: 0.022 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: not <null>
-	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testCreateEventEqualEventExist(EventTabServicesTester.java:382)
+	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testCreateEventEqualEventExist(EventTabServicesTester.java:448)
 
-testEventStartTimeAndEndTimeInvalid{String, String}[2]  Time elapsed: 0.037 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <Giờ không hợp lệ! Vui lòng nhập đúng định dạng HH:mm.> but was: <Ngày và giờ bắt đầu phải lớn hơn ngày hiện tại>
-	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testEventStartTimeAndEndTimeInvalid(EventTabServicesTester.java:303)
-
-testEventEndDateMoreThanStartDate  Time elapsed: 0.015 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <Ngày và giờ kết thúc phải lớn hơn ngày bắt đầu> but was: <Ngày và giờ bắt đầu phải lớn hơn ngày hiện tại>
-	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testEventEndDateMoreThanStartDate(EventTabServicesTester.java:357)
+testEventNameMaxLenght  Time elapsed: 0.008 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <null> but was: <[com.ntn.pojo.Ticket[ id=null ]]>
+	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTester.testEventNameMaxLenght(EventTabServicesTester.java:600)
 

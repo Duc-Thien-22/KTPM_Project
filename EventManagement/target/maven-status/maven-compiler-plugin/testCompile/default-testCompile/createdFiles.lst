@@ -1,3 +1,3 @@
-com\ntn\testcase\AddUserServicesTester.class
-com\ntn\testcase\EventTabServicesTester.class
-com\ntn\testcase\LoginServicesTester.class
+com\ntn\testcase\LoginServicesTest.class
+com\ntn\testcase\AddUserServicesTest.class
+com\ntn\testcase\EventTabServicesTest.class

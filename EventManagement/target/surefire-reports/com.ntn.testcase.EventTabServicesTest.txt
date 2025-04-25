@@ -1,0 +1,21 @@
+-------------------------------------------------------------------------------
+Test set: com.ntn.testcase.EventTabServicesTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.098 s <<< FAILURE! - in com.ntn.testcase.EventTabServicesTest
+testSearchDatabaseCallCountWithDebounce  Time elapsed: 1.732 s  <<< FAILURE!
+org.mockito.exceptions.verification.TooManyActualInvocations: 
+
+eventServices.getEvents(
+    0,
+    <Capturing argument: String>
+);
+Wanted 1 time:
+-> at com.ntn.eventmanagement/com.ntn.services.EventServices.getEvents(EventServices.java:31)
+But was 3 times:
+-> at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTest.testSearchDatabaseCallCountWithDebounce(EventTabServicesTest.java:884)
+-> at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTest.testSearchDatabaseCallCountWithDebounce(EventTabServicesTest.java:885)
+-> at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTest.testSearchDatabaseCallCountWithDebounce(EventTabServicesTest.java:886)
+
+
+	at com.ntn.eventmanagement/com.ntn.testcase.EventTabServicesTest.testSearchDatabaseCallCountWithDebounce(EventTabServicesTest.java:892)
+
