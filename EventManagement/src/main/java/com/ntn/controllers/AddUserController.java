@@ -40,7 +40,7 @@ public class AddUserController implements Initializable {
     @FXML
     private TextField txtNumberPhone;
 
-    private final AddUserServices addUserService = new AddUserServices(new UserServices());
+    private final AddUserServices addUserService = new AddUserServices();
 
     /**
      * Initializes the controller class.

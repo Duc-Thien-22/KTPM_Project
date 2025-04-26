@@ -29,17 +29,49 @@ import javafx.scene.layout.HBox;
  */
 public class EventTabServices {
 
-    private int eventIdSelected = 0;
-    private Map<String, Integer> venuesId = new HashMap<>();
-    private final VenueServices venueServies = new VenueServices();
-    private final EventServices eventServices = new EventServices();
-    private final NotificationServices notificationServices = new NotificationServices();
-    private final TicketServices ticketServices = new TicketServices();
-    private final Map<Tickettype, HBox> ticketRows = new HashMap<>();
-    private final int ONE_HOUR = 24 * 60 * 60 * 1000;
+    private int eventIdSelected;
+    private Map<String, Integer> venuesId;
+    private final VenueServices venueServies;
+    private final EventServices eventServices;
+    private final NotificationServices notificationServices;
+    private final TicketServices ticketServices;
+    private final Map<Tickettype, HBox> ticketRows;
+    private final int ONE_DAY;
+
+    public EventTabServices() {
+        this.eventIdSelected = 0;
+        this.venuesId = new HashMap<>();
+        this.venueServies = new VenueServices();
+        this.eventServices = new EventServices();
+        this.notificationServices = new NotificationServices();
+        this.ticketServices = new TicketServices();
+        this.ticketRows = new HashMap<>();
+        this.ONE_DAY = 24 * 60 * 60 * 1000;
+    }
+
+    public EventTabServices(VenueServices venuesServices, EventServices eventServices,
+            NotificationServices notificationServices, TicketServices ticketServices,
+            Map<Tickettype, HBox> ticketRows) {
+        this.eventIdSelected = 0;
+        this.venuesId = new HashMap<>();
+        this.venueServies = venuesServices;
+        this.eventServices = eventServices;
+        this.notificationServices = notificationServices;
+        this.ticketServices = ticketServices;
+        this.ticketRows = ticketRows;
+        this.ONE_DAY = 24 * 60 * 60 * 1000;
+    }
 
     public List<Venue> getVenues() throws SQLException {
-        return this.getVenueServies().getVenues();
+        return this.venueServies.getVenues();
+    }
+
+    public List<Event> getEvents(int num, String kw) throws SQLException {
+        return this.eventServices.getEvents(num, kw);
+    }
+
+    public List<Tickettype> getTicketTypes() throws SQLException {
+        return this.ticketServices.getTicketTypes();
     }
 
     public String checkEventStatus(Event e) {
@@ -57,7 +89,7 @@ public class EventTabServices {
             return statusMessage;
         }
 
-        if (e.getStartDate().getTime() - timestamp.getTime() < getONE_HOUR()) {
+        if (e.getStartDate().getTime() - timestamp.getTime() < getONE_DAY()) {
             return "Sự kiện không được chỉnh hoặc hủy sau 24h";
         }
         return null;
@@ -296,9 +328,9 @@ public class EventTabServices {
     }
 
     /**
-     * @return the ONE_HOUR
+     * @return the ONE_DAY
      */
-    public int getONE_HOUR() {
-        return ONE_HOUR;
+    public int getONE_DAY() {
+        return ONE_DAY;
     }
 }

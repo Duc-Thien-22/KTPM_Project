@@ -15,6 +15,10 @@ public class AddUserServices {
 
     private final UserServices userServices;
 
+    public AddUserServices() {
+        this.userServices = new UserServices();
+    }
+    
     public AddUserServices(UserServices userServices) {
         this.userServices = userServices;
     }

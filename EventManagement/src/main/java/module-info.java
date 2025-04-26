@@ -11,7 +11,7 @@ module com.ntn.eventmanagement {
     opens com.ntn.controllers to javafx.fxml; 
     opens com.ntn.pojo to javafx.base;
     opens com.ntn.pojo.DTO to javafx.base;
-    
+            
     exports com.ntn.eventmanagement;
 
 }

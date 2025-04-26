@@ -20,7 +20,7 @@ import org.mockito.*;
  * @author NHAT
  */
 @ExtendWith(MockitoExtension.class)
-public class LoginServicesTester {
+public class LoginServicesTest {
 
     @Mock
     private UserServices userServices;
@@ -127,4 +127,101 @@ public class LoginServicesTester {
         String result = loginServices.login("Admin", "Admin123@");
         Assertions.assertEquals("SUCCESS:ADMIN", result);
     }
+
+    @Test
+    @DisplayName("Kiểm tra lỗi injection của username")
+    public void testUserNameInjectionError() throws Exception {
+        String result = loginServices.login("OR 1=1 -- ", "Admin123@");
+        Assertions.assertEquals("Bạn chưa có tài khoản !!", result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra lỗi injection ở password")
+    public void testPasswordInjectionError() throws Exception {
+        String result = loginServices.login("Admin", "' OR '1'='1");
+        Assertions.assertEquals("Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt", result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra lỗi username có khoảng trắng đầu và cuối")
+    public void testUserNameStartEndSpace() throws SQLException, Exception {
+        Mockito.when(userServices.getUserByUsername("abc")).thenReturn(null);
+
+        String result = loginServices.login("  abc  ", "Admin123@");
+
+        Assertions.assertEquals("Bạn chưa có tài khoản !!", result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra lỗi password có khoảng trắng đầu và cuối")
+    public void testPasswordStartEndSpace() throws SQLException, Exception {
+        String result = loginServices.login("Admin", " Admin123@ ");
+
+        Assertions.assertEquals(
+                "Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt",
+                result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra password chứa kí tự unicode đặc biệt")
+    public void testPasswordWithUnicodeEmoji() throws Exception {
+        String result = loginServices.login("Admin", "Admin123😀");
+        Assertions.assertEquals("Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt", result);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra password đúng nhưng hash không khớp")
+    public void testCorrectPasswordButWrongHash() throws Exception {
+        User userTest = new User();
+        userTest.setUsername("Admin");
+        userTest.setPassword("HASHED_WRONG"); // intentionally wrong
+        userTest.setIsActive(Boolean.TRUE);
+        userTest.setRole("ADMIN");
+
+        Mockito.when(userServices.getUserByUsername("Admin")).thenReturn(userTest);
+
+        String result = loginServices.login("Admin", "Admin123@");
+        Assertions.assertEquals("Nhập sai mật khẩu !!", result);
+    }
+
+    @Test
+    @DisplayName("Test brute force: nhập đúng username nhưng sai password nhiều lần")
+    public void testBruteForceAttempts() throws Exception {
+        User userTest = new User();
+        userTest.setUsername("Admin");
+        userTest.setPassword(ValidationUtils.hashPassword("Admin123@"));
+        userTest.setIsActive(Boolean.TRUE);
+        userTest.setRole("ADMIN");
+
+        Mockito.when(userServices.getUserByUsername("Admin")).thenReturn(userTest);
+
+        for (int i = 0; i <= 3; i++) {
+            String result = loginServices.login("Admin", "Admin123@" + i);
+            Assertions.assertEquals("Nhập sai mật khẩu !!", result);
+        }
+
+        // Lần thứ 4 bị chặn
+        String resultBlocked = loginServices.login("Admin", "Admin123@");
+        Assertions.assertEquals("Tài khoản bị tạm khóa do đăng nhập sai quá số lần cho phép", resultBlocked);
+    }
+
+    @Test
+    @DisplayName("Kiểm tra thời gian xử lý login < 500ms")
+    public void testLoginPerformance() throws Exception {
+        User userTest = new User();
+        userTest.setUsername("Admin");
+        userTest.setPassword(ValidationUtils.hashPassword("Admin123@"));
+        userTest.setIsActive(Boolean.TRUE);
+        userTest.setRole("ADMIN");
+
+        Mockito.when(userServices.getUserByUsername("Admin")).thenReturn(userTest);
+
+        long start = System.currentTimeMillis();
+        String result = loginServices.login("Admin", "Admin123@");
+        long duration = System.currentTimeMillis() - start;
+
+        Assertions.assertEquals("SUCCESS:ADMIN", result);
+        Assertions.assertTrue(duration < 500, "Thời gian xử lý quá chậm: " + duration + "ms");
+    }
+    
 }

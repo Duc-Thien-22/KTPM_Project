@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+     * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+     * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ntn.testcase;
 
@@ -16,6 +16,7 @@ import com.ntn.services.EventServices;
 import com.ntn.services.EventTabServices;
 import com.ntn.services.NotificationServices;
 import com.ntn.services.NotificationTabServices;
+import com.ntn.services.TicketServices;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +40,9 @@ public class NotificationTabServicesTest {
 
     @Mock
     private EventServices eventServices;
+
+    @Mock
+    private TicketServices ticketServices;
 
     @Mock
     private NotificationServices notificationServices;
@@ -124,35 +128,18 @@ public class NotificationTabServicesTest {
         mockEvent.setVenue(mockVenue);
         mockEvent.setMaxAttendees(50);
 
-//        Tickettype mockTicketType = new Tickettype();
-//        mockTicketType.setId(1);
-//
-//        Ticket mockTicket = new Ticket();
-//        mockTicket.setEventId(mockEvent);
-//        mockTicket.setId(1);
-//        mockTicket.setTicketTypeId(mockTicketType);
-        User mockUser1 = new User();
-        mockUser1.setId(1);
+        User mockUser = new User();
+        mockUser.setId(1);
 
-        User mockUser2 = new User();
-        mockUser2.setId(2);
+        Registration mockRegis = new Registration();
+        mockRegis.setId(1);
+        mockRegis.setUserId(mockUser);
+        mockRegis.setCreatedDate(new Timestamp(System.currentTimeMillis() + 2 * 60 * 60 * 1000));
+        mockRegis.setUpdatedDate(new Timestamp(System.currentTimeMillis() + 2 * 60 * 60 * 1000));
 
-        Registration mockRegis1 = new Registration();
-        mockRegis1.setId(1);
-        mockRegis1.setUserId(mockUser1);
-        mockRegis1.setCreatedDate(new Timestamp(System.currentTimeMillis() - 2 * 60 * 60 * 1000));
-        mockRegis1.setUpdatedDate(new Timestamp(System.currentTimeMillis() - 2 * 60 * 60 * 1000));
-        //mockRegis1.setTicketId(mockTicket);
-
-        Registration mockRegis2 = new Registration();
-        mockRegis2.setId(2);
-        mockRegis2.setUserId(mockUser2);
-        mockRegis2.setCreatedDate(new Timestamp(System.currentTimeMillis() + 4 * 60 * 60 * 1000));
-        mockRegis2.setUpdatedDate(new Timestamp(System.currentTimeMillis() + 4 * 60 * 60 * 1000));
-        //mockRegis2.setTicketId(mockTicket);
 
         List<Event> mockEvents = Arrays.asList(mockEvent);
-        List<Integer> mockRegisterIds = Arrays.asList(mockUser1.getId(), mockUser2.getId());
+        List<Integer> mockRegisterIds = Arrays.asList(mockUser.getId());
 
         Mockito.when(eventServices.getEvents()).thenReturn(mockEvents);
         Mockito.when(eventServices.getRegisterByEventId(1)).thenReturn(mockRegisterIds);
@@ -163,7 +150,7 @@ public class NotificationTabServicesTest {
 
         int result = notificationTabServices.autoRemiderNotification();
 
-        Assertions.assertEquals(2, result);
+        Assertions.assertEquals(1, result);
     }
 
     @Test
@@ -229,7 +216,7 @@ public class NotificationTabServicesTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra khi hủy sự kiện thì thông báo được gửi thành công đến các người dùng đã đăng ký")
+    @DisplayName("Kiểm tra khi hủy sự kiện thì gửi thông báo đến các người dùng đã đăng ký")
     public void testSendNotification_Success() throws SQLException {
         Event event = new Event();
         event.setId(36);
@@ -268,26 +255,32 @@ public class NotificationTabServicesTest {
             }
         }
     }
-    
+
     @Test
-    @DisplayName("Kiểm tra xem sự k")
-    public void testUpdate() throws SQLException {
-//        Event event = new Event();
-//        event.setId(36);
-//        event.setIsActive(Boolean.TRUE);
-//        
-//        Mockito.when(eventServices.updateEventById(event)).thenReturn(event);
-//        
-//        Assertions.assertTrue(eventTabServices.sendNotification(0, content, type));
-//        
-//        
-//
-//        EventTabServices e = new EventTabServices();
-//
-//        // Gọi hàm gửi thông báo
-//        boolean result = e.sendNotification(event.getId(), content, type);
-//        Assertions.assertFalse(result, "Gửi thông báo thành công");
+    @DisplayName("Không cho phép gửi spam 3 thông báo liên tiếp thật nhanh")
+    public void testSendTwoNotificationsQuicklyBlockedByLogic() throws SQLException {
+        int eventId = 1;
+        String content = "Thông báo nhanh";
+
+        Mockito.when(notificationServices.sendNotificationForUser(content, "UPDATE", eventId))
+                .thenReturn(2);
+
+        for (int i = 0; i < 2; i++) {
+            boolean result1 = notificationTabServices.sendNotification(eventId, content);
+            Assertions.assertTrue(result1, "Lần gửi đầu tiên phải thành công");
+        }
+
+        boolean result2 = notificationTabServices.sendNotification(eventId, content);
+        Assertions.assertFalse(result2, "Lần gửi thứ 3 nên bị chặn do gửi quá nhanh");
     }
 
+    @Test
+    @DisplayName("Kiểm tra sẽ không gửi được thông báo cho sự kiện không có ai đăng ký")
+    public void testSendNotification_NoRegistrations() throws SQLException {
+        int eventId = 1;
+        String content = "Thông báo sự kiện";
+        boolean result = notificationTabServices.sendNotification(eventId, content);
+        Assertions.assertFalse(result, "Không nên gửi thông báo khi không có user nào đăng ký");
+    }
 
 }

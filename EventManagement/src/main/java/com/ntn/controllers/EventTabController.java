@@ -208,7 +208,7 @@ public class EventTabController implements Initializable {
 
     public void loadEvent(String kw) throws SQLException {
         this.tbEvents.getItems().clear();
-        this.tbEvents.setItems(FXCollections.observableList(this.eventTabService.getEventServices().getEvents(0, kw)));
+        this.tbEvents.setItems(FXCollections.observableList(this.eventTabService.getEvents(0, kw)));
         this.tbEvents.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
@@ -243,7 +243,7 @@ public class EventTabController implements Initializable {
 
     public void loadTicketType() throws SQLException {
         VBox container = new VBox(10);
-        List<Tickettype> ticketTypes = this.eventTabService.getTicketServices().getTicketTypes();
+        List<Tickettype> ticketTypes = this.eventTabService.getTicketTypes();
 
         for (Tickettype type : ticketTypes) {
             HBox row = new HBox(10);
@@ -257,10 +257,12 @@ public class EventTabController implements Initializable {
             TextField priceField = new TextField();
             priceField.setPromptText("Nhập giá vé");
 
-            this.eventTabService.getTicketRows().put(type, row);
+           
 
             row.getChildren().addAll(nameLabel, quantityField, priceField);
             container.getChildren().add(row);
+            
+             this.eventTabService.getTicketRows().put(type, row);
         }
 
         this.hTicketType.getChildren().add(container);
