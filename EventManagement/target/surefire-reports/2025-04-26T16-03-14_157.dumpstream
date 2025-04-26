@@ -1,0 +1,6 @@
+# Created at 2025-04-26T16:03:14.545
+Error: Could not find or load main class Thien\.m2\repository\org\openjfx\javafx-controls\23.0.1\javafx-controls-23.0.1-win.jar;C:\Users\Duc
+
+# Created at 2025-04-26T16:03:14.545
+Caused by: java.lang.ClassNotFoundException: Thien\/m2\repository\org\openjfx\javafx-controls\23/0/1\javafx-controls-23/0/1-win/jar;C:\Users\Duc
+
