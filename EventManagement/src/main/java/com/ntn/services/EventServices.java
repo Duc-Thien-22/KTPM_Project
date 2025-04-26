@@ -113,23 +113,23 @@ public class EventServices {
         return rs;
     }
 
-    public int updateEventById(Event e) throws SQLException {
-        int rs = -1;
-        try (Connection conn = JdbcUtils.getConnection()) {
-            String sql = "UPDATE event SET name = ?, start_date = ? , end_date = ?, max_attendees = ? , venue_id = ?, is_active = ? WHERE id = ?";
-            PreparedStatement stm = conn.prepareCall(sql);
-            stm.setString(1, e.getName());
-            stm.setTimestamp(2, e.getStartDate());
-            stm.setTimestamp(3, e.getEndDate());
-            stm.setInt(4, e.getMaxAttendees());
-            stm.setInt(5, e.getVenue().getId());
-            stm.setBoolean(6, e.getIsActive());
-            stm.setInt(7, e.getId());
+        public int updateEventById(Event e) throws SQLException {
+            int rs = -1;
+            try (Connection conn = JdbcUtils.getConnection()) {
+                String sql = "UPDATE event SET name = ?, start_date = ? , end_date = ?, max_attendees = ? , venue_id = ?, is_active = ? WHERE id = ?";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setString(1, e.getName());
+                stm.setTimestamp(2, e.getStartDate());
+                stm.setTimestamp(3, e.getEndDate());
+                stm.setInt(4, e.getMaxAttendees());
+                stm.setInt(5, e.getVenue().getId());
+                stm.setBoolean(6, e.getIsActive());
+                stm.setInt(7, e.getId());
 
-            rs = stm.executeUpdate();
+                rs = stm.executeUpdate();
+            }
+            return rs;
         }
-        return rs;
-    }
 
     public List<Integer> getRegisterByEventId(int eventId) throws SQLException {
         List<Integer> registerIds = new ArrayList<>();
@@ -179,7 +179,7 @@ public class EventServices {
                 + "FROM event e "
                 + "JOIN venue v ON e.venue_id = v.id "
                 + "LEFT JOIN ticket t ON t.event_id = e.id "
-                + "WHERE e.end_date > Now() ";
+                + "WHERE e.end_date > Now() And e.is_active = 1 ";
 
         // Nếu có từ khóa tìm kiếm
         if (kw != null && !kw.trim().isEmpty()) {

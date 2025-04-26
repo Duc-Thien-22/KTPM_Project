@@ -18,23 +18,40 @@ import java.util.List;
  */
 public class NotificationTabServices {
 
-    private final EventServices eventServices = new EventServices();
-    private final NotificationServices notificationServices = new NotificationServices();
-    private final int ONE_HOUR = 24 * 60 * 60 * 1000;
+    private final EventServices eventServices;
+    private final NotificationServices notificationServices;
+    private final int ONE_DAY = 24 * 60 * 60 * 1000;
+
+    public NotificationTabServices() {
+        this.eventServices = new EventServices();
+        this.notificationServices = new NotificationServices();
+    }
+    
+    
+
+    public NotificationTabServices(EventServices eventServices, NotificationServices notificationServices) {
+        this.eventServices = eventServices;
+        this.notificationServices = notificationServices;
+    }
+    
+    
 
     public List<Event> getEvents() throws SQLException {
         return getEventServices().getEvents();
     }
-
+    
+//
     public List<NotificationDTO> getNotificationHistory() throws SQLException {
         return getNotificationServices().getNotifications(null);
     }
 
+    //
     public boolean sendNotification(int eventId, String content) throws SQLException {
         int count = notificationServices.sendNotificationForUser(content, "UPDATE", eventId);
         return count > 0;
     }
 
+    //
     public String checkInputValid(Event e, String content) {
         if (e == null || content == null) {
             return "Vui lòng nhập dữ liệu !!";
@@ -42,6 +59,7 @@ public class NotificationTabServices {
         return null;
     }
 
+    //
     public int autoRemiderNotification() throws SQLException {
         int totalSent = 0;
         List<Event> events = this.eventServices.getEvents();
@@ -50,7 +68,7 @@ public class NotificationTabServices {
             List<Integer> registerIds = this.eventServices.getRegisterByEventId(event.getId());
             
             if (event.getIsActive()
-                    && event.getStartDate().getTime() - timestamp.getTime() <= ONE_HOUR
+                    && event.getStartDate().getTime() - timestamp.getTime() <= ONE_DAY
                     && !this.notificationServices.isUsersRemider(registerIds)) {
                 
                 totalSent += this.notificationServices.sendNotificationForUser(
@@ -59,6 +77,8 @@ public class NotificationTabServices {
         }
         return totalSent;
     }
+    
+    
 
     /**
      * @return the eventServices
@@ -77,7 +97,7 @@ public class NotificationTabServices {
     /**
      * @return the ONE_HOUR
      */
-    public int getONE_HOUR() {
-        return ONE_HOUR;
+    public int getONE_DAY() {
+        return ONE_DAY;
     }
 }
