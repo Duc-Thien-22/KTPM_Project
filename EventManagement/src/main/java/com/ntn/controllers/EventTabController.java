@@ -211,6 +211,8 @@ public class EventTabController implements Initializable {
         this.tbEvents.setItems(FXCollections.observableList(this.eventTabService.getEventServices().getEvents(0, kw)));
         this.tbEvents.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
+    
+
 
     public void createTicketsHanlder(ActionEvent e) throws SQLException {
         String[] errorMsg = new String[1];
@@ -409,3 +411,4 @@ public class EventTabController implements Initializable {
         this.eventTabService.clearTicketType();
     }
 }
+

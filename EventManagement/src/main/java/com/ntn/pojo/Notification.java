@@ -58,7 +58,7 @@ public class Notification implements Serializable {
     @ManyToOne(optional = false)
     private Registration registerId;
 
-    public Notification() {
+    public Notification(String sự_kiện_đã_cập_nhật) {
     }
 
     public Notification(Integer id) {
