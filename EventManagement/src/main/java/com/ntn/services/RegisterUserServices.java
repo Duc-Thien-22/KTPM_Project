@@ -19,6 +19,10 @@ public class RegisterUserServices {
         this.notificationServices = new NotificationServices();
     }
     
+    public RegisterUserServices(EventServices eventServices, NotificationServices notificationServices) {
+        this.eventServices = eventServices;
+        this.notificationServices = notificationServices;
+    }
 
     public List<EventDTO> getEvents(String keyword) throws SQLException {
         return eventServices.getEvents(keyword);

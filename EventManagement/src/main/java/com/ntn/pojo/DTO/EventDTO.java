@@ -21,7 +21,11 @@ public class EventDTO {
     private int registeredUser;
     private Venue venue;
     private String ticketName;
-
+    
+    public EventDTO(){
+        
+    }
+    
     public EventDTO(int id, String name, Timestamp startDate, Timestamp endDate, int maxAttendees, int registeredUser, Venue venue) {
         this.id = id;
         this.name = name;
