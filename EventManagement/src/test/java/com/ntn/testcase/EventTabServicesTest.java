@@ -6,6 +6,7 @@ package com.ntn.testcase;
 
 import com.ntn.controllers.Utils;
 import com.ntn.pojo.Event;
+import com.ntn.pojo.JdbcUtils;
 import com.ntn.pojo.Ticket;
 import com.ntn.pojo.Tickettype;
 import com.ntn.pojo.Venue;
@@ -14,14 +15,21 @@ import com.ntn.services.EventTabServices;
 import com.ntn.services.NotificationServices;
 import com.ntn.services.TicketServices;
 import com.ntn.services.VenueServices;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -860,7 +868,7 @@ public class EventTabServicesTest {
         Assertions.assertNotNull(events);
         Assertions.assertTrue(events.get(0).getName().contains("Tes"));
     }
-    
+
     // lưu ý ch ổn
     @Test
     @DisplayName("Kiểm tra số lần truy vấn CSDL khi tìm kiếm với debounce")
