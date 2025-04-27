@@ -6,6 +6,7 @@ package com.ntn.pojo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -209,6 +210,10 @@ public class Event implements Serializable {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public void setRegistrationEndDate(LocalDateTime minusDays) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

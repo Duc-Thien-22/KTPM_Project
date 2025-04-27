@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.ntn.testcase.AddUserServicesTest
 -------------------------------------------------------------------------------
-Tests run: 41, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 24.93 s <<< FAILURE! -- in com.ntn.testcase.AddUserServicesTest
-com.ntn.testcase.AddUserServicesTest.testSQLInjectionFromUsername -- Time elapsed: 9.849 s <<< FAILURE!
+Tests run: 41, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 11.91 s <<< FAILURE! -- in com.ntn.testcase.AddUserServicesTest
+com.ntn.testcase.AddUserServicesTest.testSQLInjectionFromUsername -- Time elapsed: 4.955 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Đăng kí thất bại> but was: <SUCCESS>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -15,7 +15,7 @@ org.opentest4j.AssertionFailedError: expected: <Đăng kí thất bại> but was
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testApostropheInUsername -- Time elapsed: 0.743 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testApostropheInUsername -- Time elapsed: 0.543 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Tên đăng kí không được chứa nháy đơn> but was: <SUCCESS>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -28,7 +28,7 @@ org.opentest4j.AssertionFailedError: expected: <Tên đăng kí không được 
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testMultipleRegistrationsSameIP -- Time elapsed: 4.835 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testMultipleRegistrationsSameIP -- Time elapsed: 2.401 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Bạn đã đăng ký quá số lần cho phép từ IP này> but was: <SUCCESS>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -41,7 +41,7 @@ org.opentest4j.AssertionFailedError: expected: <Bạn đã đăng ký quá số 
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testLongUsername -- Time elapsed: 1.267 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testLongUsername -- Time elapsed: 0.390 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Username quá dài> but was: <SUCCESS>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -54,7 +54,7 @@ org.opentest4j.AssertionFailedError: expected: <Username quá dài> but was: <SU
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testInvalidEmails(String)[5] -- Time elapsed: 0.928 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testInvalidEmails(String)[5] -- Time elapsed: 0.730 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Sai định dạng email.. EX: example@gmail.com> but was: <Đăng kí thất bại>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -96,7 +96,7 @@ org.opentest4j.AssertionFailedError: expected: <Sai định dạng email.. EX: e
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testInvalidEmails(String)[10] -- Time elapsed: 0.665 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testInvalidEmails(String)[10] -- Time elapsed: 0.507 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Sai định dạng email.. EX: example@gmail.com> but was: <Đăng kí thất bại>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -138,7 +138,7 @@ org.opentest4j.AssertionFailedError: expected: <Sai định dạng email.. EX: e
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 
-com.ntn.testcase.AddUserServicesTest.testInvalidPhoneNumbers(String)[1] -- Time elapsed: 0.967 s <<< FAILURE!
+com.ntn.testcase.AddUserServicesTest.testInvalidPhoneNumbers(String)[1] -- Time elapsed: 0.511 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <Sai định dạng sdt ... EX: +8401010, 098.... gồm 9-15 kí tự> but was: <Đăng kí thất bại>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
