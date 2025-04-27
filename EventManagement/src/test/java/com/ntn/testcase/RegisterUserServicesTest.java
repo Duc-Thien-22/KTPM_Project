@@ -15,13 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.*;
 import org.mockito.*;
 import org.junit.jupiter.api.extension.*;
-
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
+import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -56,6 +55,7 @@ public class RegisterUserServicesTest {
 //        };
 //    }
     @Test
+    @DisplayName("Kiểm tra khi tìm kiếm sự kiện với từ khóa hợp lệ")
     public void testGetEventsSuccess() throws SQLException {
         List<EventDTO> expectedEvents = List.of(new EventDTO(), new EventDTO());
 
@@ -68,6 +68,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra khi gây lỗi SQLException khi lấy sự kiện")
     public void testGetEventsSQLException() throws SQLException {
         when(eventServicesMock.getEvents("fail")).thenThrow(new SQLException("Database error"));
 
@@ -79,6 +80,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra xung đột thời gian: Có xung đột")
     public void testCheckTimeConflictTrue() throws SQLException {
         when(eventServicesMock.checkStatusRegis(1, 100)).thenReturn(true);
 
@@ -89,6 +91,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra xung đột thời gian: Không có xung đột")
     public void testCheckTimeConflictFalse() throws SQLException {
         when(eventServicesMock.checkStatusRegis(2, 101)).thenReturn(false);
 
@@ -99,6 +102,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra lấy thông tin vé cho sự kiện")
     public void testGetTicketInfo() {
         Map<String, Object[]> ticketInfo = new HashMap<>();
         ticketInfo.put("VIP", new Object[]{50, 100});
@@ -115,6 +119,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra thanh toán vé thành công")
     public void testProcessPaymentSuccess() {
         when(eventServicesMock.processPayment(1, "VIP", 100)).thenReturn(true);
 
@@ -125,6 +130,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra thanh toán vé thất bại")
     public void testProcessPaymentFailure() {
         when(eventServicesMock.processPayment(2, "Normal", 101)).thenReturn(false);
 
@@ -135,6 +141,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra lấy danh sách thông báo và sắp xếp giảm dần theo thời gian")
     public void testGetNotificationsSorted() throws SQLException {
         NotificationDTO noti1 = new NotificationDTO();
         Timestamp start = Utils.convertToTimestamp(LocalDate.parse("2025-04-26"), "07:00");
@@ -155,6 +162,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra danh sách thông báo khi không có thông báo nào")
     public void testGetNotificationsEmpty() throws SQLException {
         when(notificationServicesMock.getNotifications(101)).thenReturn(Collections.emptyList());
 
@@ -165,6 +173,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra lấy danh sách sự kiện đã đăng ký thành công")
     public void testGetRegisteredEventsSuccess() throws SQLException {
         List<EventDTO> events = List.of(new EventDTO());
         when(eventServicesMock.getEvents(100)).thenReturn(events);
@@ -176,6 +185,7 @@ public class RegisterUserServicesTest {
     }
 
     @Test
+    @DisplayName("Kiểm tra lỗi SQLException khi lấy danh sách sự kiện đã đăng ký")
     public void testGetRegisteredEventsSQLException() throws SQLException {
         when(eventServicesMock.getEvents(200)).thenThrow(new SQLException("Database error"));
 
