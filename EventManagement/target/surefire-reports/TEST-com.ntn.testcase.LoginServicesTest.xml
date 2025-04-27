@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ntn.testcase.NotificationTabServicesTest" time="0.313" tests="9" errors="0" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ntn.testcase.LoginServicesTest" time="5.249" tests="18" errors="1" skipped="0" failures="3">
   <properties>
     <property name="java.specification.version" value="23"/>
     <property name="javafx.runtime.version" value="23.0.1+4"/>
@@ -64,25 +64,86 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="67.0"/>
   </properties>
-  <testcase name="testCheckUserReceiveNoti" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.025"/>
-  <testcase name="testReminderAlreadySent" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.003"/>
-  <testcase name="testSendTwoNotificationsQuicklyBlockedByLogic" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.01">
-    <failure message="Lần gửi thứ 3 nên bị chặn do gửi quá nhanh ==&gt; expected: &lt;false&gt; but was: &lt;true&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: Lần gửi thứ 3 nên bị chặn do gửi quá nhanh ==> expected: <false> but was: <true>
+  <testcase name="testPasswordWithUnicodeEmoji" classname="com.ntn.testcase.LoginServicesTest" time="0.003"/>
+  <testcase name="testUserNameStartEndSpace" classname="com.ntn.testcase.LoginServicesTest" time="0.007">
+    <error message="&#10;Strict stubbing argument mismatch. Please check:&#10; - this invocation of &apos;getUserByUsername&apos; method:&#10;    userServices.getUserByUsername(&quot;  abc  &quot;);&#10;    -&gt; at com.ntn.eventmanagement/com.ntn.services.LoginServices.login(LoginServices.java:37)&#10; - has following stubbing(s) with different arguments:&#10;    1. userServices.getUserByUsername(&quot;abc&quot;);&#10;      -&gt; at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testUserNameStartEndSpace(LoginServicesTest.java:148)&#10;Typically, stubbing argument mismatch indicates user mistake when writing tests.&#10;Mockito fails early so that you can debug potential problem easily.&#10;However, there are legit scenarios when this exception generates false negative signal:&#10;  - stubbing the same method multiple times using &apos;given().will()&apos; or &apos;when().then()&apos; API&#10;    Please use &apos;will().given()&apos; or &apos;doReturn().when()&apos; API for stubbing.&#10;  - stubbed method is intentionally invoked with different arguments by code under test&#10;    Please use default or &apos;silent&apos; JUnit Rule (equivalent of Strictness.LENIENT).&#10;For more information see javadoc for PotentialStubbingProblem class." type="org.mockito.exceptions.misusing.PotentialStubbingProblem"><![CDATA[org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'getUserByUsername' method:
+    userServices.getUserByUsername("  abc  ");
+    -> at com.ntn.eventmanagement/com.ntn.services.LoginServices.login(LoginServices.java:37)
+ - has following stubbing(s) with different arguments:
+    1. userServices.getUserByUsername("abc");
+      -> at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testUserNameStartEndSpace(LoginServicesTest.java:148)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.ntn.eventmanagement/com.ntn.services.UserServices.getUserByUsername(UserServices.java:21)
+	at com.ntn.eventmanagement/com.ntn.services.LoginServices.login(LoginServices.java:37)
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testUserNameStartEndSpace(LoginServicesTest.java:150)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+]]></error>
+  </testcase>
+  <testcase name="testBruteForceAttempts" classname="com.ntn.testcase.LoginServicesTest" time="2.911">
+    <failure message="expected: &lt;Tài khoản bị tạm khóa do đăng nhập sai quá số lần cho phép&gt; but was: &lt;SUCCESS:ADMIN&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <Tài khoản bị tạm khóa do đăng nhập sai quá số lần cho phép> but was: <SUCCESS:ADMIN>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-	at org.junit.jupiter.api.AssertFalse.failNotFalse(AssertFalse.java:63)
-	at org.junit.jupiter.api.AssertFalse.assertFalse(AssertFalse.java:36)
-	at org.junit.jupiter.api.Assertions.assertFalse(Assertions.java:239)
-	at com.ntn.eventmanagement/com.ntn.testcase.NotificationTabServicesTest.testSendTwoNotificationsQuicklyBlockedByLogic(NotificationTabServicesTest.java:274)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testBruteForceAttempts(LoginServicesTest.java:205)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
 ]]></failure>
   </testcase>
-  <testcase name="testSendNotification" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.006"/>
-  <testcase name="testNoticesHistory" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.007"/>
-  <testcase name="testSendNotification_NoRegistrations" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.01"/>
-  <testcase name="testSendNotification_Success" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.208"/>
-  <testcase name="testEventNoNotification" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.005"/>
-  <testcase name="testAutoReminderNotification" classname="com.ntn.testcase.NotificationTabServicesTest" time="0.007"/>
+  <testcase name="testPasswordInjectionError" classname="com.ntn.testcase.LoginServicesTest" time="0.001"/>
+  <testcase name="testCorrectPasswordButWrongHash" classname="com.ntn.testcase.LoginServicesTest" time="0.002"/>
+  <testcase name="testUserNameNullAndPassWordValid" classname="com.ntn.testcase.LoginServicesTest" time="0.023"/>
+  <testcase name="testUserNameInjectionError" classname="com.ntn.testcase.LoginServicesTest" time="0.005"/>
+  <testcase name="testUserNameValidPasswordValid" classname="com.ntn.testcase.LoginServicesTest" time="0.738"/>
+  <testcase name="testUserNameValidPasswordMaxSize" classname="com.ntn.testcase.LoginServicesTest" time="0.004"/>
+  <testcase name="testUserNameNullAndPasswordNull" classname="com.ntn.testcase.LoginServicesTest" time="0.006"/>
+  <testcase name="testLoginPerformance" classname="com.ntn.testcase.LoginServicesTest" time="0.692"/>
+  <testcase name="testUserNameValidPasswordInvalid" classname="com.ntn.testcase.LoginServicesTest" time="0.006">
+    <failure message="expected: &lt;Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt&gt; but was: &lt;Bạn chưa có tài khoản !!&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <Password ít nhất là 6 kí tự, bắt đầu bằng 1 kí tự In hoa, thường, chữ số và kí tự đặc biệt> but was: <Bạn chưa có tài khoản !!>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testUserNameValidPasswordInvalid(LoginServicesTest.java:102)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+]]></failure>
+  </testcase>
+  <testcase name="testUserNameValidPasswordStartNomalInvalid" classname="com.ntn.testcase.LoginServicesTest" time="0.004"/>
+  <testcase name="testPasswordStartEndSpace" classname="com.ntn.testcase.LoginServicesTest" time="0.003"/>
+  <testcase name="testUserDisable" classname="com.ntn.testcase.LoginServicesTest" time="0.805">
+    <failure message="expected: &lt;tài khoản đã bị khóa&gt; but was: &lt;SUCCESS:null&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <tài khoản đã bị khóa> but was: <SUCCESS:null>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at com.ntn.eventmanagement/com.ntn.testcase.LoginServicesTest.testUserDisable(LoginServicesTest.java:77)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+]]></failure>
+  </testcase>
+  <testcase name="testUserNameNotInDataBase" classname="com.ntn.testcase.LoginServicesTest" time="0.003"/>
+  <testcase name="testUsernameValidPasswordNull" classname="com.ntn.testcase.LoginServicesTest" time="0.001"/>
+  <testcase name="testUserNameValidPasswordSizeInvalid" classname="com.ntn.testcase.LoginServicesTest" time="0.001"/>
 </testsuite>

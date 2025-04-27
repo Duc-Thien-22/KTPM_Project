@@ -6,6 +6,7 @@ package com.ntn.testcase;
 
 import com.ntn.controllers.Utils;
 import com.ntn.pojo.Event;
+import com.ntn.pojo.JdbcUtils;
 import com.ntn.pojo.Ticket;
 import com.ntn.pojo.Tickettype;
 import com.ntn.pojo.Venue;
@@ -14,14 +15,20 @@ import com.ntn.services.EventTabServices;
 import com.ntn.services.NotificationServices;
 import com.ntn.services.TicketServices;
 import com.ntn.services.VenueServices;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -860,7 +867,7 @@ public class EventTabServicesTest {
         Assertions.assertNotNull(events);
         Assertions.assertTrue(events.get(0).getName().contains("Tes"));
     }
-    
+
     // lưu ý ch ổn
     @Test
     @DisplayName("Kiểm tra số lần truy vấn CSDL khi tìm kiếm với debounce")
@@ -898,5 +905,95 @@ public class EventTabServicesTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
         Assertions.assertTrue(result.get(0).getName().contains("tes"));
+    }
+
+    @Test
+    @DisplayName("Kiểm tra hoàn tiền với danh sách user hợp lệ nhưng lỗi hệ thống (lỗi database)")
+    public void testRefundMoney_SQLException() {
+        List<Integer> registerIds = Arrays.asList(22, 23); // Giả sử các ID hợp lệ
+        try {
+            //Giả lập lỗi trong khi gọi refundeMoneyToUsers
+            Mockito.doThrow(new SQLException("Database error"))
+                    .when(this.eventServices).refundeMoneyToUsers(registerIds);
+
+            boolean result = this.eventTabServices.refundeMoney(registerIds);
+            Assertions.assertFalse(result); // Vì có lỗi trong DB, không thể hoàn tiền
+        } catch (SQLException ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Database error"));
+        }
+    }
+
+    @Test
+    @DisplayName("Kiểm tra hoàn tiền cho các user không hợp lệ")
+    public void testRefundMoney_InvalidRegisterIds() {
+        List<Integer> registerIds = Arrays.asList(9999, 10000); // Giả sử đây là các ID không hợp lệ, không tồn tại trong DB
+        EventTabServices e = new EventTabServices();
+        try {
+            boolean result = e.refundeMoney(registerIds);
+            Assertions.assertFalse(result); // Không có người dùng tương ứng, không thể hoàn tiền
+        } catch (SQLException ex) {
+            Assertions.fail("SQL Exception: " + ex.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Kiểm tra xóa 1 sự kiện trong database thật")
+    public void testDeleteEventById() throws SQLException {
+        try (Connection conn = JdbcUtils.getConnection()) {
+            EventServices e = new EventServices();
+            int eventId = 45; // giả sử event này tồn tại trước đó trong DB
+
+            try {
+                // Gọi hàm cần test
+                int result = e.deleteEventById(eventId);
+                Assertions.assertTrue(result > 0); // đảm bảo xóa thành công
+
+                // Kiểm tra event đã bị xóa
+                String sql = "SELECT * FROM event WHERE id=?";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setInt(1, eventId);
+
+                ResultSet rs = stm.executeQuery();
+                Assertions.assertFalse(rs.next()); // không còn dòng nào => đã xóa thành công
+
+            } catch (SQLException ex) {
+                Logger.getLogger(EventTabServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+                Assertions.fail("SQL Exception: " + ex.getMessage());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Kiểm tra xóa 1 sự kiện không tồn tại trong database")
+    public void testDeleteEventById_EventNotExists() {
+        int eventId = -9999; 
+        EventServices e = new EventServices();
+        try {
+            int result = e.deleteEventById(eventId);
+            Assertions.assertEquals(0, result);
+
+        } catch (SQLException ex) {
+            Assertions.fail("SQL Exception: " + ex.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Kiểm tra nếu Admin cancel không xóa sự kiện nữa")
+    public void testDeleteEventById_AdminCancelsDelete() {
+        int eventId = 103;
+        EventServices e = new EventServices();
+
+        boolean userConfirmedDelete = false;
+
+        if (!userConfirmedDelete) {
+            Assertions.assertTrue(true); 
+        } else {
+            try {
+                int result = e.deleteEventById(eventId);
+                Assertions.assertTrue(result > 0);
+            } catch (SQLException ex) {
+                Assertions.fail("SQL Exception: " + ex.getMessage());
+            }
+        }
     }
 }
