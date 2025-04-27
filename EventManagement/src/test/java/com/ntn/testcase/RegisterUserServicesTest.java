@@ -10,7 +10,6 @@ import com.ntn.pojo.DTO.NotificationDTO;
 import com.ntn.services.EventServices;
 import com.ntn.services.NotificationServices;
 import com.ntn.services.RegisterUserServices;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.junit.jupiter.*;
 import org.mockito.*;
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.extension.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,21 +37,6 @@ public class RegisterUserServicesTest {
     @Mock
     private NotificationServices notificationServicesMock;
 
-//    @BeforeEach
-//    void setUp() {
-//        // Tạo mock
-//        eventServicesMock = mock(EventServices.class);
-//        notificationServicesMock = mock(NotificationServices.class);
-//
-//        // Inject mock vào RegisterUserServices bằng cách kế thừa tạm để chèn (nếu cần)
-//        registerUserServices = new RegisterUserServices() {
-//            {
-//                // Gán lại bằng mock
-//                super.eventServices = eventServicesMock;
-//                super.notificationServices = notificationServicesMock;
-//            }
-//        };
-//    }
     @Test
     @DisplayName("Kiểm tra khi tìm kiếm sự kiện với từ khóa hợp lệ")
     public void testGetEventsSuccess() throws SQLException {
