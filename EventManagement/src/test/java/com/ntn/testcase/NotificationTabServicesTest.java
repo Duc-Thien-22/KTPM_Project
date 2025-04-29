@@ -74,11 +74,12 @@ public class NotificationTabServicesTest {
     @Test
     @DisplayName("Kiểm tra có gửi được thông báo hay không")
     public void testSendNotification() throws SQLException {
-        int eventId = 1;
+        int eventId = 47;
         String content = "Hôm nay là thứ 2";
         int insert = 3;
 
-        Mockito.when(notificationServices.sendNotificationForUser(content, "UPDATE", eventId)).thenReturn(insert);
+        Mockito.when(notificationServices.sendNotificationForUser(content, "UPDATE", eventId))
+                .thenReturn(insert);
 
         boolean result = notificationTabServices.sendNotification(eventId, content);
         Assertions.assertTrue(result);
@@ -182,8 +183,9 @@ public class NotificationTabServicesTest {
         Mockito.when(eventServices.getRegisterByEventId(1)).thenReturn(mockRegis);
         Mockito.when(notificationServices.isUsersRemider(mockRegis)).thenReturn(true);
 
-        int result = notificationTabServices.autoRemiderNotification();
-        Assertions.assertEquals(0, result);
+        int result1 = notificationTabServices.autoRemiderNotification();
+        int result2 = notificationTabServices.autoRemiderNotification();
+        Assertions.assertEquals(0, result2);
     }
 
     @Test

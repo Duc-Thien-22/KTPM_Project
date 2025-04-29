@@ -242,7 +242,7 @@ public class EventTabServicesTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra lấy danh sự kiện")
+    @DisplayName("Kiểm tra lấy danh sách loại vé")
     public void testGetTicketTypes() throws SQLException {
         List<Tickettype> ticketTypes = new ArrayList<>();
         Tickettype t1 = new Tickettype();
@@ -293,7 +293,7 @@ public class EventTabServicesTest {
         Mockito.doReturn(null).when(this.eventTabServices).checkEventStatus(e);
 
         String result = this.eventTabServices.checkValidAction(e);
-        Assertions.assertNull(result);  // Không lỗi gì
+        Assertions.assertNull(result);
     }
 
     @Test
@@ -347,7 +347,7 @@ public class EventTabServicesTest {
         });
     }
 
-    @DisplayName("Kiểm tra ngày tạo sự kiện phải lớn hơn ngày hiện tại")
+    @DisplayName("Kiểm tra thời gian bắt đầu hoặc thời gian kết thúc không hợp lệ")
     @ParameterizedTest
     @CsvSource({
         "'07:00ewrw','23:00'",
@@ -712,7 +712,7 @@ public class EventTabServicesTest {
         );
 
         Assertions.assertNull(tickets);
-        Assertions.assertEquals("Tổng số lượng vé khong được lớp hơn số khách mời", errorMsg[0]);
+        Assertions.assertEquals("Tổng số lượng vé không được lớn hơn số khách mời", errorMsg[0]);
     }
 
     @Test
@@ -871,7 +871,6 @@ public class EventTabServicesTest {
     @Test
     @DisplayName("Kiểm tra số lần truy vấn CSDL khi tìm kiếm với debounce")
     public void testSearchDatabaseCallCountWithDebounce() throws SQLException, InterruptedException {
-        // Tạo danh sách sự kiện giả
         List<Event> events = new ArrayList<>();
         Event e1 = new Event();
         Event e2 = new Event();
@@ -881,57 +880,49 @@ public class EventTabServicesTest {
         events.add(e1);
         events.add(e2);
 
-        // Mô phỏng việc trả về danh sách sự kiện khi gọi API với từ khóa "tes"
         Mockito.when(this.eventServices.getEvents(Mockito.eq(0), Mockito.eq("tes"))).thenReturn(events);
 
-        // Tạo ArgumentCaptor để theo dõi đối số truyền vào
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
-        // Giả lập người dùng nhập từ khóa tìm kiếm
         eventServices.getEvents(0, "t");
         eventServices.getEvents(0, "te");
         eventServices.getEvents(0, "tes");
 
-        // Mô phỏng việc người dùng dừng nhập sau khi nhập "tes"
-        Thread.sleep(500);  // Giả lập thời gian debounce
+        Thread.sleep(500);  
 
-        // Xác minh chỉ có một lần gọi và đối số là "tes"
         Mockito.verify(this.eventServices, Mockito.times(1)).getEvents(Mockito.eq(0), captor.capture());
-        Assertions.assertEquals("tes", captor.getValue());  // Kiểm tra đối số cuối cùng là "tes"
+        Assertions.assertEquals("tes", captor.getValue());
 
-        // Kiểm tra kết quả trả về
         List<Event> result = eventServices.getEvents(0, "tes");
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
         Assertions.assertTrue(result.get(0).getName().contains("tes"));
     }
 
-    
-    
     @Test
     @DisplayName("Kiểm tra hủy thành công 1 sự kiện trong database thật")
     public void testDestroyEvent_Success() throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
             Event event = new Event();
-            event.setId(1); // giả sử event này tồn tại trong DB
+            event.setId(1); 
             event.setName("Concert");
             event.setStartDate(Timestamp.valueOf("2025-05-01 10:00:00"));
             event.setEndDate(Timestamp.valueOf("2025-05-01 12:00:00"));
             event.setMaxAttendees(100);
-            event.setVenue(new Venue(1)); // Giả sử venue tồn tại
-            event.setIsActive(true); // Sự kiện đang hoạt động
+            event.setVenue(new Venue(1)); 
+            event.setIsActive(true); 
 
             try {
                 boolean result = this.eventTabServices.destroyEvent(event);
-                Assertions.assertTrue(result); // Thành công, trả về true
+                Assertions.assertTrue(result); 
 
-                // Kiểm tra trạng thái sự kiện đã bị hủy (isActive = false)
+               
                 String sql = "SELECT is_active FROM event WHERE id = ?";
                 PreparedStatement stm = conn.prepareCall(sql);
                 stm.setInt(1, event.getId());
                 ResultSet rs = stm.executeQuery();
                 if (rs.next()) {
-                    Assertions.assertFalse(rs.getBoolean("is_active")); // Trạng thái sự kiện phải là "Kết thúc"
+                    Assertions.assertFalse(rs.getBoolean("is_active")); 
                 } else {
                     Assertions.fail("Event not found in database.");
                 }
@@ -950,30 +941,30 @@ public class EventTabServicesTest {
 
         try {
             boolean result = this.eventTabServices.destroyEvent(event);
-            Assertions.assertFalse(result); // Vì event không tồn tại, không thể hủy
+            Assertions.assertFalse(result); 
         } catch (SQLException ex) {
             Assertions.fail("SQL Exception: " + ex.getMessage());
         }
     }
 
     @Test
-    @DisplayName("Kiểm tra hủy thàn thành công 1 sự kiện và hoàn tiền thành công cho người dùng trong database thật")
+    @DisplayName("Kiểm tra hủy thành công 1 sự kiện và hoàn tiền thành công cho người dùng trong database thật")
     public void testRefundMoney_Success() throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
             try {
                 EventTabServices e = new EventTabServices();
-                List<Integer> registerIds = Arrays.asList(22, 23); // Giả sử đây là các ID đăng ký hợp lệ
+                List<Integer> registerIds = Arrays.asList(22, 23); //ID đăng ký hợp lệ
                 boolean result = e.refundeMoney(registerIds);
-                Assertions.assertTrue(result); // Hoàn tiền thành công, trả về true
+                Assertions.assertTrue(result); 
 
-                // Kiểm tra trong DB
+                
                 for (Integer registerId : registerIds) {
                     String sql = "SELECT is_refunded FROM eventmanagement.payment WHERE register_id = ?";
                     PreparedStatement stm = conn.prepareCall(sql);
                     stm.setInt(1, registerId);
                     ResultSet rs = stm.executeQuery();
                     if (rs.next()) {
-                        Assertions.assertTrue(rs.getBoolean("is_refunded")); // Trạng thái is_refunded phải là true
+                        Assertions.assertTrue(rs.getBoolean("is_refunded")); 
                     } else {
                         Assertions.fail("Payment not found for registerId: " + registerId);
                     }
@@ -987,11 +978,11 @@ public class EventTabServicesTest {
     @Test
     @DisplayName("Kiểm tra hoàn tiền với danh sách user đăng kí rỗng")
     public void testRefundMoney_EmptyRegisterIds() {
-        List<Integer> registerIds = Collections.emptyList(); // Danh sách trống
+        List<Integer> registerIds = Collections.emptyList(); 
         EventTabServices e = new EventTabServices();
         try {
             boolean result = e.refundeMoney(registerIds);
-            Assertions.assertFalse(result); // Không có người dùng nên không thể hoàn tiền
+            Assertions.assertFalse(result); 
         } catch (SQLException ex) {
             Assertions.fail("SQL Exception: " + ex.getMessage());
         }
@@ -1000,11 +991,11 @@ public class EventTabServicesTest {
     @Test
     @DisplayName("Kiểm tra hoàn tiền cho các user không hợp lệ")
     public void testRefundMoney_InvalidRegisterIds() {
-        List<Integer> registerIds = Arrays.asList(9999, 10000); // Giả sử đây là các ID không hợp lệ, không tồn tại trong DB
+        List<Integer> registerIds = Arrays.asList(9999, 10000); 
         EventTabServices e = new EventTabServices();
         try {
             boolean result = e.refundeMoney(registerIds);
-            Assertions.assertFalse(result); // Không có người dùng tương ứng, không thể hoàn tiền
+            Assertions.assertFalse(result); 
         } catch (SQLException ex) {
             Assertions.fail("SQL Exception: " + ex.getMessage());
         }
@@ -1013,14 +1004,14 @@ public class EventTabServicesTest {
     @Test
     @DisplayName("Kiểm tra hoàn tiền với danh sách user hợp lệ nhưng lỗi hệ thống (lỗi database)")
     public void testRefundMoney_SQLException() {
-        List<Integer> registerIds = Arrays.asList(22, 23); // Giả sử các ID hợp lệ
+        List<Integer> registerIds = Arrays.asList(22, 23); 
         try {
-            //Giả lập lỗi trong khi gọi refundeMoneyToUsers
+           
             Mockito.doThrow(new SQLException("Database error"))
                     .when(this.eventServices).refundeMoneyToUsers(registerIds);
 
             boolean result = this.eventTabServices.refundeMoney(registerIds);
-            Assertions.assertFalse(result); // Vì có lỗi trong DB, không thể hoàn tiền
+            Assertions.assertFalse(result); 
         } catch (SQLException ex) {
             Assertions.assertTrue(ex.getMessage().contains("Database error"));
         }
@@ -1031,20 +1022,19 @@ public class EventTabServicesTest {
     public void testDeleteEventById() throws SQLException {
         try (Connection conn = JdbcUtils.getConnection()) {
             EventServices e = new EventServices();
-            int eventId = 45; // giả sử event này tồn tại trước đó trong DB
+            int eventId = 47; 
 
             try {
-                // Gọi hàm cần test
+                
                 int result = e.deleteEventById(eventId);
-                Assertions.assertTrue(result > 0); // đảm bảo xóa thành công
+                Assertions.assertTrue(result > 0); 
 
-                // Kiểm tra event đã bị xóa
                 String sql = "SELECT * FROM event WHERE id=?";
                 PreparedStatement stm = conn.prepareCall(sql);
                 stm.setInt(1, eventId);
 
                 ResultSet rs = stm.executeQuery();
-                Assertions.assertFalse(rs.next()); // không còn dòng nào => đã xóa thành công
+                Assertions.assertFalse(rs.next()); 
 
             } catch (SQLException ex) {
                 Logger.getLogger(EventTabServicesTest.class.getName()).log(Level.SEVERE, null, ex);

@@ -168,7 +168,7 @@ public class EventTabServices {
             }
 
             if (totalNumberTickets > maxAttendess) {
-                errorMsg[0] = "Tổng số lượng vé khong được lớp hơn số khách mời";
+                errorMsg[0] = "Tổng số lượng vé không được lớn hơn số khách mời";
                 this.clearTicketType();
                 return null;
             }

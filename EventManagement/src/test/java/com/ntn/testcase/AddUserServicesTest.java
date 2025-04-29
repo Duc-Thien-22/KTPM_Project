@@ -196,7 +196,7 @@ public class AddUserServicesTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra hệ thống KHÔNG bị SQL Injection từ username")
+    @DisplayName("Kiểm tra hệ thống lỗi SQL Injection từ username")
     public void testSQLInjectionFromUsername() throws Exception {
         User u = new User(
                 "test'); DROP TABLE users; --",

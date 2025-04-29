@@ -74,7 +74,7 @@ public class LoginServicesTest {
         Mockito.when(userServices.getUserByUsername("test")).thenReturn(userTest);
 
         String result = loginServices.login("test", "Admin123@");
-        Assertions.assertEquals("tài khoản đã bị khóa", result);
+        Assertions.assertEquals("Tài khoản đã bị khóa", result);
     }
 
     @Test
@@ -170,11 +170,11 @@ public class LoginServicesTest {
     }
 
     @Test
-    @DisplayName("Kiểm tra password đúng nhưng hash không khớp")
+    @DisplayName("Kiểm tra username hợp lệ, password sai")
     public void testCorrectPasswordButWrongHash() throws Exception {
         User userTest = new User();
         userTest.setUsername("Admin");
-        userTest.setPassword("HASHED_WRONG"); // intentionally wrong
+        userTest.setPassword("HASHED_WRONG"); 
         userTest.setIsActive(Boolean.TRUE);
         userTest.setRole("ADMIN");
 
