@@ -1,0 +1,4 @@
+--patch-module
+com.ntn.eventmanagement=_
+--add-reads
+com.ntn.eventmanagement=ALL-UNNAMED

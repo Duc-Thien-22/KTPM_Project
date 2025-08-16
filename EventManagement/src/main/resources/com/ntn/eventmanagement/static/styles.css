@@ -1,0 +1,16 @@
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+}
+
+/* Hover cho nút Đăng nhập */
+.button:login:hover {
+    -fx-background-color: linear-gradient(to right, #45a049, #4CAF50);
+    -fx-cursor: hand;
+}
+
+/* Hover cho nút Đăng ký */
+.button:register:hover {
+    -fx-background-color: linear-gradient(to right, #1E88E5, #2196F3);
+    -fx-cursor: hand;
+}
